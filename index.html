@@ -1,0 +1,67 @@
+<!doctype html>
+<link rel="stylesheet" href="assets/css/styles.css">
+
+
+<!-- structured data (JSON-LD) for portfolio and photographer -->
+<script type="application/ld+json">
+{
+"@context": "https://schema.org",
+"@type": "Person",
+"name": "Titus Emanuel Ilieși",
+"jobTitle": "Fotoreporter",
+"url": "https://USERNAME.github.io/REPO/"
+}
+</script>
+</head>
+<body>
+<header class="hero">
+<div class="hero-inner">
+<h1>Fotoreporter</h1>
+<p class="lead">Fotografie de eveniment și reportaj</p>
+<a class="btn" href="#portfolio">Vezi portofoliul</a>
+</div>
+</header>
+
+
+<main>
+<section class="about">
+<h2>Despre mine</h2>
+<div class="about-inner">
+<img class="avatar" src="images/placeholder-avatar.jpg" alt="Avatar Titus Emanuel">
+<p class="bio">Sunt Titus Emanuel, fotoreporter pasionat, cu experiență în evenimente sociale și culturale. Stilul meu pune accent pe emoție. (Înlocuiește textul cu cel propriu.)</p>
+</div>
+</section>
+
+
+<section id="portfolio" class="portfolio">
+<h2>Portofoliu</h2>
+<div id="portfolio-filters" class="filters">
+<button data-cat="all" class="active">Toate</button>
+<button data-cat="evenimente">Evenimente</button>
+<button data-cat="reportaje">Reportaje</button>
+<button data-cat="portrete">Portrete</button>
+<button data-cat="urban">Urban</button>
+</div>
+
+
+<div id="gallery" class="gallery" aria-live="polite">
+<!-- galería populată din images.json -->
+</div>
+</section>
+
+
+<section class="recent">
+<h3>Proiecte recente</h3>
+<div id="recent" class="recent-grid"></div>
+</section>
+</main>
+
+
+<footer>
+<p>© <span id="year"></span> Titus Emanuel Ilieși — Portofoliu</p>
+</footer>
+
+
+<script src="assets/js/app.js" defer></script>
+</body>
+</html>
