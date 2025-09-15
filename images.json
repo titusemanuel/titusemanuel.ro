@@ -18,3 +18,420 @@
 "tags": ["portrete"]
 }
 ]
+# Portfolio Fotoreporter - Structură repo și cod
+
+Mai jos găsești un pachet complet (fișiere listate) pe care îl poți pune într-un repository GitHub **(GitHub Pages)**. Am inclus fișierele principale: `index.html`, `assets/css/styles.css`, `assets/js/app.js`, un script Node care generează `images.json` (pentru încărcarea automată a pozelor) și un mic admin mockup (`admin.html`).
+
+---
+
+## Structură recomandată (în repo)
+
+```
+photoreport-portfolio/
+├─ index.html
+├─ admin.html
+├─ images.json            # manifest generat automat (vezi script)
+├─ sitemap.xml            # generat de script (opțional)
+├─ README.md
+├─ assets/
+│  ├─ css/
+│  │  └─ styles.css
+│  ├─ js/
+│  │  └─ app.js
+│  └─ libs/
+│     └─ bcrypt.min.js    # opțional pentru hashing local
+├─ tools/
+│  └─ generate_manifest.js   # node script pentru a genera images.json + sitemap
+└─ images/
+   ├─ foto1.jpg
+   ├─ foto2.jpg
+   └─ ...
+```
+
+---
+
+> Am creat conținutul pentru toate fișierele importante în secțiunile următoare. Pune imaginile tale în folderul `images/` și rulează scriptul `tools/generate_manifest.js` (vezi instrucțiuni) ca să actualizezi `images.json` automat.
+
+---
+
+## Fișier: `index.html`
+
+```html
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Titus Emanuel Ilieși — Portofoliu Fotoreporter</title>
+  <meta name="description" content="Portofoliu fotoreporter — fotografie de eveniment, reportaj, portrete. Portofoliu online al lui Titus Emanuel Ilieși.">
+
+  <!-- SEO OpenGraph -->
+  <meta property="og:title" content="Titus Emanuel Ilieși — Fotoreporter">
+  <meta property="og:description" content="Portofoliu fotoreporter - evenimente, reportaje, portrete.">
+  <meta property="og:type" content="website">
+
+  <link rel="canonical" href="https://USERNAME.github.io/REPO/">
+  <link rel="stylesheet" href="assets/css/styles.css">
+
+  <!-- structured data (JSON-LD) for portfolio and photographer -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Titus Emanuel Ilieși",
+    "jobTitle": "Fotoreporter",
+    "url": "https://USERNAME.github.io/REPO/"
+  }
+  </script>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <h1>Fotoreporter</h1>
+      <p class="lead">Fotografie de eveniment și reportaj</p>
+      <a class="btn" href="#portfolio">Vezi portofoliul</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="about">
+      <h2>Despre mine</h2>
+      <div class="about-inner">
+        <img class="avatar" src="images/placeholder-avatar.jpg" alt="Avatar Titus Emanuel">
+        <p class="bio">Sunt Titus Emanuel, fotoreporter pasionat, cu experiență în evenimente sociale și culturale. Stilul meu pune accent pe emoție. (Înlocuiește textul cu cel propriu.)</p>
+      </div>
+    </section>
+
+    <section id="portfolio" class="portfolio">
+      <h2>Portofoliu</h2>
+      <div id="portfolio-filters" class="filters">
+        <button data-cat="all" class="active">Toate</button>
+        <button data-cat="evenimente">Evenimente</button>
+        <button data-cat="reportaje">Reportaje</button>
+        <button data-cat="portrete">Portrete</button>
+        <button data-cat="urban">Urban</button>
+      </div>
+
+      <div id="gallery" class="gallery" aria-live="polite">
+        <!-- galería populată din images.json -->
+      </div>
+    </section>
+
+    <section class="recent">
+      <h3>Proiecte recente</h3>
+      <div id="recent" class="recent-grid"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© <span id="year"></span> Titus Emanuel Ilieși — Portofoliu</p>
+  </footer>
+
+  <script src="assets/js/app.js" defer></script>
+</body>
+</html>
+```
+
+---
+
+## Fișier: `assets/css/styles.css` (stil simplu, responsive)
+
+```css
+:root{--accent:#f2c94c;--bg:#fafafa;--text:#111}
+*{box-sizing:border-box}
+body{font-family:Inter,system-ui,Arial,sans-serif;margin:0;background:var(--bg);color:var(--text)}
+.hero{background:#111 url('../images/hero.jpg') center/cover no-repeat;color:#fff;padding:80px 20px}
+.hero-inner{max-width:1100px;margin:0 auto}
+.hero h1{font-size:48px;margin:0 0 10px}
+.lead{opacity:.9;margin:0 0 20px}
+.btn{background:var(--accent);padding:12px 18px;border-radius:6px;text-decoration:none;color:#111}
+main{max-width:1100px;margin:40px auto;padding:0 20px}
+.about-inner{display:flex;gap:20px;align-items:center}
+.avatar{width:88px;height:88px;border-radius:50%;object-fit:cover}
+.portfolio .filters{display:flex;gap:12px;margin:14px 0}
+.filters button{background:transparent;border:0;padding:8px 10px;cursor:pointer}
+.filters .active{font-weight:700}
+.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.card{position:relative;overflow:hidden;border-radius:6px;background:#fff}
+.card img{width:100%;height:180px;object-fit:cover;display:block;user-select:none;-webkit-user-drag:none}
+.card .meta{padding:10px}
+.meta .tags{font-size:13px;color:#666}
+footer{text-align:center;padding:40px 0;color:#666}
+/* hide right click on images overlay */
+.nodownload{position:relative}
+.nodownload::after{content:'';position:absolute;inset:0}
+/* small responsive tweaks */
+@media(max-width:520px){.hero h1{font-size:34px}}
+```
+
+---
+
+## Fișier: `assets/js/app.js`
+
+```javascript
+/* app.js - încarcă images.json, afișează galerie, setează URL când dai click pe poză
+   - Folosește images.json generat de scriptul din tools/
+   - Etichetele (alt/title) sunt generate din numele fișierului
+*/
+
+const GALLERY = document.getElementById('gallery');
+const RECENT = document.getElementById('recent');
+const YEAR = document.getElementById('year');
+YEAR.textContent = new Date().getFullYear();
+
+let IMAGES = [];
+
+async function loadManifest(){
+  try{
+    const r = await fetch('images.json', {cache: 'no-cache'});
+    IMAGES = await r.json();
+    renderGallery(IMAGES);
+    renderRecent(IMAGES.slice(0,6));
+  }catch(e){
+    GALLERY.innerHTML = '<p>Nu am găsit images.json. Vezi instrucțiunile din README.</p>';
+    console.error(e);
+  }
+}
+
+function filenameToLabel(filename){
+  // elimină extensia și înlocuiește underscore/hyphen cu spațiu
+  return filename.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ');
+}
+
+function preventImgDownload(img){
+  // best-effort: dezactivează drag, click drept, context menu
+  img.addEventListener('contextmenu', e => e.preventDefault());
+  img.addEventListener('dragstart', e => e.preventDefault());
+  img.addEventListener('mousedown', e => { if (e.button===2) e.preventDefault(); });
+}
+
+function renderGallery(list){
+  GALLERY.innerHTML = '';
+  list.forEach(item =>{
+    const card = document.createElement('article');
+    card.className = 'card nodownload';
+
+    // folosim <img> normal (nu șterge posibilitatea de a salva din rețea), dar prevenim drag/rightclick
+    const img = document.createElement('img');
+    img.src = item.url;
+    img.alt = filenameToLabel(item.file);
+    img.title = filenameToLabel(item.file);
+    preventImgDownload(img);
+
+    const meta = document.createElement('div');
+    meta.className = 'meta';
+    meta.innerHTML = `<strong>${filenameToLabel(item.file)}</strong>
+      <div class="tags">${item.country || 'Țară necunoscută'} • ${item.photographer || 'Fotograf necunoscut'} • ${item.width}×${item.height}</div>`;
+
+    // click - deschidem o vizualizare simplă (modal) și actualizăm bara de adresa
+    img.addEventListener('click', ()=>{
+      // setăm URL (pushState) pentru SEO-friendly fragment
+      const safe = encodeURIComponent(item.file.replace(/\s+/g,'-'));
+      history.pushState({photo: item.file}, '', `?photo=${safe}`);
+      openLightbox(item);
+    });
+
+    card.appendChild(img);
+    card.appendChild(meta);
+    GALLERY.appendChild(card);
+  });
+}
+
+function renderRecent(list){
+  if(!RECENT) return;
+  RECENT.innerHTML = list.map(i=>`<div class="card"><img src="${i.url}" alt="${filenameToLabel(i.file)}"><div class="meta"><strong>${filenameToLabel(i.file)}</strong><div class="tags">${i.country||'—'} • ${i.photographer||'—'} • ${i.width}×${i.height}</div></div></div>`).join('');
+}
+
+// lightbox simplu
+function openLightbox(item){
+  const overlay = document.createElement('div');
+  overlay.style.position='fixed';overlay.style.inset=0;overlay.style.background='rgba(0,0,0,0.85)';overlay.style.zIndex=9999;overlay.style.display='flex';overlay.style.alignItems='center';overlay.style.justifyContent='center';
+  overlay.tabIndex=0;
+  const img = document.createElement('img');img.src=item.url;img.alt=filenameToLabel(item.file);img.style.maxWidth='90%';img.style.maxHeight='90%';img.style.boxShadow='0 6px 30px rgba(0,0,0,.6)';
+  preventImgDownload(img);
+  overlay.appendChild(img);
+  overlay.addEventListener('click', ()=>{overlay.remove(); history.pushState({}, '', window.location.pathname);});
+  overlay.addEventListener('keydown', (e)=>{ if(e.key==='Escape') {overlay.remove(); history.pushState({}, '', window.location.pathname);} });
+  document.body.appendChild(overlay);
+}
+
+// filtrare
+const filters = document.querySelectorAll('#portfolio-filters button');
+filters.forEach(b=>b.addEventListener('click', ()=>{
+  filters.forEach(x=>x.classList.remove('active')); b.classList.add('active');
+  const cat = b.dataset.cat;
+  if(cat==='all') renderGallery(IMAGES);
+  else renderGallery(IMAGES.filter(i=> (i.tags||[]).includes(cat)));
+}));
+
+// back/forward handling (dacă cineva venea cu ?photo=...)
+window.addEventListener('popstate', e=>{
+  const q = new URLSearchParams(location.search).get('photo');
+  if(!q){ // închidem lightbox dacă există
+    const open = document.querySelector('div[role="lightbox"]');
+    // fallback: nu păstrăm lightbox state
+  }
+});
+
+loadManifest();
+```
+
+---
+
+## Fișier: `images.json` (exemplu)
+
+```json
+[
+  {
+    "file": "eveniment-protest-01.jpg",
+    "url": "images/eveniment-protest-01.jpg",
+    "width": 1920,
+    "height": 1280,
+    "country": "Romania",
+    "photographer": "Titus Emanuel Ilieși",
+    "tags": ["evenimente","reportaje"]
+  },
+  {
+    "file": "portret-femeie-01.jpg",
+    "url": "images/portret-femeie-01.jpg",
+    "width": 1200,
+    "height": 800,
+    "country": "Romania",
+    "photographer": "Titus Emanuel Ilieși",
+    "tags": ["portrete"]
+  }
+]
+```
+
+> **Notă:** `images.json` se generează automat de scriptul din `tools/` (vezi mai jos). Câmpurile `width` și `height` sunt determinate de scriptul Node.
+
+---
+
+## Fișier: `tools/generate_manifest.js` (Node.js) — rulează local înainte de push
+
+```javascript
+// Node script: scanează folderul images/ și generează images.json + sitemap.xml
+// Folosește: node tools/generate_manifest.js
+
+const fs = require('fs');
+const path = require('path');
+const sizeOf = require('image-size'); // npm i image-size
+
+const IMAGES_DIR = path.join(__dirname, '..', 'images');
+const OUT_MANIFEST = path.join(__dirname, '..', 'images.json');
+const OUT_SITEMAP = path.join(__dirname, '..', 'sitemap.xml');
+
+const files = fs.readdirSync(IMAGES_DIR).filter(f=>/\.(jpe?g|png|webp)$/i.test(f));
+const items = files.map(f=>{
+  const fp = path.join(IMAGES_DIR, f);
+  let dims = {width: null, height: null};
+  try{ dims = sizeOf(fp); }catch(e){ }
+  // heuristic: deduce tags from filename
+  const tags = [];
+  const lf = f.toLowerCase();
+  if(lf.includes('eveniment')||lf.includes('protest')) tags.push('evenimente');
+  if(lf.includes('reportaj')) tags.push('reportaje');
+  if(lf.includes('portret')||lf.includes('portrete')) tags.push('portrete');
+  if(lf.includes('urban')) tags.push('urban');
+
+  return {
+    file: f,
+    url: `images/${f}`,
+    width: dims.width || null,
+    height: dims.height || null,
+    country: 'Romania',
+    photographer: 'Titus Emanuel Ilieși',
+    tags
+  };
+});
+
+fs.writeFileSync(OUT_MANIFEST, JSON.stringify(items, null, 2));
+
+// sitemap (simple)
+const base = 'https://USERNAME.github.io/REPO';
+const urls = [base, base + '/index.html', ...items.map(i=>`${base}/?photo=${encodeURIComponent(i.file)}`)];
+const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(u=>`  <url><loc>${u}</loc></url>`).join('\n')}\n</urlset>`;
+fs.writeFileSync(OUT_SITEMAP, sitemap);
+console.log('images.json and sitemap.xml generate');
+```
+
+> Rulează: `npm install image-size` apoi `node tools/generate_manifest.js` în rădăcina proiectului. Înlocuiește `USERNAME` și `REPO` cu datele tale în script sau în fișiere HTML.
+
+---
+
+## Fișier: `admin.html` (mockup - login client-side)
+
+```html
+<!doctype html>
+<html lang="ro">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin</title></head>
+<body>
+  <h1>Admin (demo)</h1>
+  <p>Aici e o demo autentificare client-side. *Nu* e securizată pentru producție. Pentru protecție reală folosește Netlify Identity, Firebase Auth sau un back-end.</p>
+  <form id="login">
+    <input id="pw" type="password" placeholder="Parolă admin">
+    <button type="submit">Autentifică</button>
+  </form>
+  <script>
+    const PASS_HASH = 'REPLACE_WITH_HASH';
+    document.getElementById('login').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const v = document.getElementById('pw').value;
+      // demo: acceptăm parola "admin" - înlocuiește logicul
+      if(v === 'admin'){ localStorage.setItem('admin','1'); alert('Autentificat (demo)'); location.href='/admin-panel.html'; }
+      else alert('Parolă greșită (demo)');
+    });
+  </script>
+</body>
+</html>
+```
+
+---
+
+## Ce am făcut pentru SEO & indexare Google
+
+1. `meta description`, OpenGraph și `canonical` incluse în `index.html`.
+2. `sitemap.xml` generat de scriptul din `tools/` pentru a trimite la Google Search Console.
+3. `images.json` conține numele fișierelor (folosite pentru `alt` și `title`) — Google folosește atributul `alt` pentru indexare imagini.
+4. URL-ul se actualizează cu `?photo=NUME` la click (folosind `history.pushState`) pentru a avea URL-uri unice pentru fiecare fotografie.
+
+**Important:** Google indexează cel mai bine conținut HTML static. Conținutul populat din JS se indexează de obicei, dar pentru siguranță poți genera o versiune statică pre-rendered (ex: un build script care scrie HTML static pentru fiecare fotografie) sau folosește un back-end.
+
+---
+
+## Protecția imaginilor
+
+Am adăugat măsuri *best-effort*:
+
+* dezactivare `contextmenu` și `dragstart` pe elementul `<img>`;
+* suprapunere CSS pentru a face dificultoasă descărcarea prin drag.
+
+**Avertisment:** Nu există metodă 100% sigură pentru a preveni descărcarea imaginilor în browser: dacă imaginea este afișată, utilizatorul poate obține fișierul din rețea sau din cache. Pentru protecție reală folosește watermarking sau serviciu care streațează imaginile securizat și servește thumbnail-uri.
+
+---
+
+## Pași rapidi pentru instalare (GitHub Pages)
+
+1. Clonează repo în local.
+2. Pune imaginile în folderul `images/`.
+3. Rulează `npm install image-size`.
+4. Rulează `node tools/generate_manifest.js` (actualizează `base` în script).
+5. Commit & push pe GitHub.
+6. Activează GitHub Pages din setările repo (branch `main` / folder root).
+7. Trimite sitemap-ul la Google Search Console.
+
+---
+
+## Observații de securitate și scalare
+
+* Adminul client-side nu este sigur. Dacă vrei upload direct din interfață, ai nevoie de un back-end (ex: Firebase Storage, Netlify Functions, sau un mic server Node) care să autentifice și să scrie `images.json` și imaginile.
+* Pentru SEO optim și performanță, ia în considerare generarea statică (SSG) a paginii la build-time.
+
+---
+
+Dacă vrei, pot:
+
+* genera și o variantă *statică* (un script care scrie directo HTML-urile per fotografie) — dacă îmi confirmi, o pun aici imediat;
+* sau pot trimite un `upload admin` folosind Firebase/Netlify (îți pregătesc exemplul complet).
+
+Spune-mi ce preferi și continui cu varianta dorită.
