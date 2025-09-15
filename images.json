@@ -18,43 +18,7 @@
 "tags": ["portrete"]
 }
 ]
-# Portfolio Fotoreporter - Structură repo și cod
 
-Mai jos găsești un pachet complet (fișiere listate) pe care îl poți pune într-un repository GitHub **(GitHub Pages)**. Am inclus fișierele principale: `index.html`, `assets/css/styles.css`, `assets/js/app.js`, un script Node care generează `images.json` (pentru încărcarea automată a pozelor) și un mic admin mockup (`admin.html`).
-
----
-
-## Structură recomandată (în repo)
-
-```
-photoreport-portfolio/
-├─ index.html
-├─ admin.html
-├─ images.json            # manifest generat automat (vezi script)
-├─ sitemap.xml            # generat de script (opțional)
-├─ README.md
-├─ assets/
-│  ├─ css/
-│  │  └─ styles.css
-│  ├─ js/
-│  │  └─ app.js
-│  └─ libs/
-│     └─ bcrypt.min.js    # opțional pentru hashing local
-├─ tools/
-│  └─ generate_manifest.js   # node script pentru a genera images.json + sitemap
-└─ images/
-   ├─ foto1.jpg
-   ├─ foto2.jpg
-   └─ ...
-```
-
----
-
-> Am creat conținutul pentru toate fișierele importante în secțiunile următoare. Pune imaginile tale în folderul `images/` și rulează scriptul `tools/generate_manifest.js` (vezi instrucțiuni) ca să actualizezi `images.json` automat.
-
----
-
-## Fișier: `index.html`
 
 ```html
 <!doctype html>
