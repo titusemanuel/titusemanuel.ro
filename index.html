@@ -1,226 +1,76 @@
 <!doctype html>
 <html lang="ro">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Titus Emanuel Ilieși — Portofoliu Fotoreporter</title>
-  <meta name="description" content="Portofoliu fotoreporter — fotografii încărcate automat din folderul images. Titus Emanuel Ilieși" />
-  <link rel="canonical" href="https://titusemanuel.ro.github.io/REPO/portfolio.html" />
-
-  <!-- OpenGraph / Twitter -->
-  <meta property="og:title" content="Titus Emanuel Ilieși — Portofoliu Fotoreporter" />
-  <meta property="og:description" content="Galerie de fotografii (evenimente, reportaje, portrete). Imaginile se încarcă automat din images.json" />
-  <meta property="og:type" content="website" />
-  <meta name="twitter:card" content="summary_large_image" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Portofoliu Foto — Titus Emanuel Ilieși</title>
+  <meta name="description" content="Portofoliu foto — imaginile se încarcă automat din folderul images/ folosind images.json.">
 
   <style>
-    :root{--accent:#f2c94c;--bg:#ffffff;--text:#111}
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,system-ui,Segoe UI,Arial;color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased}
-    header{background:#0f1724;color:white;padding:36px 18px;text-align:center}
-    header h1{margin:0;font-size:28px}
-    header p{margin:6px 0 0;opacity:.9}
-    main{max-width:1100px;margin:28px auto;padding:0 18px}
-    .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
-    .controls input[type="search"]{padding:8px 10px;border-radius:6px;border:1px solid #ddd;min-width:220px}
-    .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
-    .card{background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 6px 18px rgba(15,23,36,0.06);position:relative}
-    .thumbwrap{position:relative;user-select:none}
-    .thumbwrap img{display:block;width:100%;height:180px;object-fit:cover;pointer-events:auto}
-    .meta{padding:10px;font-size:14px;color:#333}
-    .meta .title{font-weight:600;margin-bottom:6px}
-    .meta .info{font-size:13px;color:#666}
-    .nodownload::after{content:'';position:absolute;inset:0} /* overlay to make saving harder */
-    footer{padding:28px;text-align:center;color:#666}
-    /* Lightbox */
-    .lb{position:fixed;inset:0;background:rgba(0,0,0,.88);display:flex;align-items:center;justify-content:center;z-index:9999}
-    .lb img{max-width:94%;max-height:94%}
-    .hidden{display:none !important}
-    @media(max-width:520px){.thumbwrap img{height:140px}}
+    body {font-family: Arial, sans-serif; margin:0; padding:0; background:#f9f9f9;}
+    header {background:#222; color:white; padding:20px; text-align:center;}
+    h1 {margin:0; font-size:24px;}
+    #gallery {display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:15px; padding:20px;}
+    .card {background:white; border-radius:8px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.1);}
+    .card img {width:100%; display:block; height:200px; object-fit:cover; user-select:none; pointer-events:none;}
+    .card .info {padding:10px; font-size:14px; color:#333;}
+    .card .title {font-weight:bold; margin-bottom:4px;}
   </style>
-
-  <!-- JSON-LD (photographer) -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Titus Emanuel Ilieși",
-    "jobTitle": "Fotoreporter",
-    "url": "https://USERNAME.github.io/REPO/"
-  }
-  </script>
 </head>
 <body>
   <header>
-    <h1>Titus Emanuel Ilieși</h1>
-    <p>Portofoliu — fotografii încărcate automat din folderul <code>images/</code></p>
+    <h1>Portofoliu Foto — Titus Emanuel Ilieși</h1>
   </header>
 
   <main>
-    <div class="controls" role="region" aria-label="Control galerie">
-      <input id="search" type="search" placeholder="Caută după nume fișier, tag, țară..." aria-label="Caută imagini" />
-      <div style="margin-left:auto;color:#666;font-size:13px">Imagini încărcate automat</div>
-    </div>
-
-    <section id="gallery" class="gallery" aria-live="polite">
-      <!-- Elementele se inserează din images.json -->
-      <p id="loading">Încarc imagini…</p>
+    <section id="gallery">
+      <p>Se încarcă imaginile…</p>
     </section>
   </main>
 
-  <footer>
-    © <span id="year"></span> Titus Emanuel Ilieși — Portofoliu
-  </footer>
-
-  <template id="cardT">
-    <article class="card">
-      <div class="thumbwrap nodownload">
-        <img alt="" />
-      </div>
-      <div class="meta">
-        <div class="title"></div>
-        <div class="info"></div>
-      </div>
-    </article>
-  </template>
-
-  <div id="lightbox" class="hidden" role="dialog" aria-hidden="true"></div>
-
   <script>
-  (function(){
-    const G = document.getElementById('gallery');
-    const LO = document.getElementById('loading');
-    const tmpl = document.getElementById('cardT');
-    const LB = document.getElementById('lightbox');
-    const YEAR = document.getElementById('year');
-    YEAR.textContent = new Date().getFullYear();
+  async function loadImages() {
+    try {
+      const res = await fetch('images.json');
+      if (!res.ok) throw new Error("Nu s-a putut încărca images.json");
+      const data = await res.json();
 
-    // util: transform filename -> label (fara extensie)
-    function filenameToLabel(fn){
-      return fn.replace(/\.[^.]+$/, '').replace(/[_\-]+/g, ' ').replace(/\%20/g, ' ').trim();
-    }
-    // best-effort prevent download interactions
-    function protectImg(img){
-      img.addEventListener('contextmenu', e=>e.preventDefault());
-      img.addEventListener('dragstart', e=>e.preventDefault());
-      img.addEventListener('mousedown', e=>{ if(e.button===2) e.preventDefault(); });
-    }
+      const gallery = document.getElementById('gallery');
+      gallery.innerHTML = ''; // curăță placeholderul
 
-    // open lightbox and set URL
-    function openLightbox(item){
-      LB.innerHTML = '';
-      LB.classList.remove('hidden');
-      LB.setAttribute('role','dialog'); LB.setAttribute('aria-hidden','false');
-      const img = document.createElement('img');
-      img.src = item.url;
-      img.alt = filenameToLabel(item.file);
-      img.onload = ()=>{ /* nothing */ };
-      protectImg(img);
-      LB.appendChild(img);
+      data.forEach(img => {
+        const card = document.createElement('div');
+        card.className = 'card';
 
-      // push state (query param friendly)
-      const safe = encodeURIComponent(item.file);
-      history.pushState({photo:item.file}, '', '?photo=' + safe);
-      LB.addEventListener('click', closeLightbox, {once:true});
-      window.addEventListener('keydown', escClose);
-    }
-    function closeLightbox(){
-      LB.classList.add('hidden');
-      LB.innerHTML = '';
-      LB.setAttribute('aria-hidden','true');
-      history.pushState({}, '', window.location.pathname);
-      window.removeEventListener('keydown', escClose);
-    }
-    function escClose(e){ if(e.key === 'Escape') closeLightbox(); }
+        const image = document.createElement('img');
+        image.src = img.url || ('images/' + img.file);
+        image.alt = img.file.replace(/\.[^/.]+$/, '').replace(/[-_]/g,' ');
 
-    // render one card
-    function renderCard(item){
-      const node = tmpl.content.cloneNode(true);
-      const art = node.querySelector('article');
-      const img = node.querySelector('img');
-      const title = node.querySelector('.title');
-      const info = node.querySelector('.info');
+        const info = document.createElement('div');
+        info.className = 'info';
 
-      img.src = item.url;
-      const label = filenameToLabel(item.file);
-      img.alt = label;
-      img.title = label;
-      protectImg(img);
+        const title = document.createElement('div');
+        title.className = 'title';
+        title.textContent = image.alt;
 
-      title.textContent = label;
-      const w = item.width || '—', h = item.height || '—';
-      info.textContent = (item.country || 'Țară necunoscută') + ' • ' + (item.photographer || 'Fotograf necunoscut') + ' • ' + w + '×' + h;
+        const details = document.createElement('div');
+        details.textContent = (img.country || '') + ' • ' + (img.photographer || '') + 
+          (img.width ? ` • ${img.width}x${img.height}` : '');
 
-      // click opens lightbox
-      img.style.cursor = 'zoom-in';
-      img.addEventListener('click', ()=> openLightbox(item));
+        info.appendChild(title);
+        info.appendChild(details);
 
-      return art;
-    }
-
-    // load manifest
-    async function loadManifest(){
-      try{
-        const r = await fetch('images.json', {cache:'no-cache'});
-        if(!r.ok) throw new Error('images.json nu a fost găsit (HTTP ' + r.status + ')');
-        const list = await r.json();
-        if(!Array.isArray(list) || list.length === 0){
-          LO.textContent = 'Nu s-au găsit imagini în images.json';
-          return;
-        }
-        LO.remove();
-        window.IMAGES = list; // expune pentru debug
-        renderGallery(list);
-        // dacă URL are ?photo=..., deschide direct
-        const q = new URLSearchParams(location.search).get('photo');
-        if(q){
-          const match = list.find(i => i.file === decodeURIComponent(q));
-          if(match) openLightbox(match);
-        }
-      }catch(err){
-        LO.textContent = 'Eroare la încărcare: ' + err.message;
-        console.error(err);
-      }
-    }
-
-    // render full gallery (array)
-    function renderGallery(list){
-      G.innerHTML = '';
-      list.forEach(item => {
-        // fallback: dacă url nu are prefix corect, îl corectăm (să fie images/...)
-        if(!item.url || (!item.url.startsWith('images/') && !item.url.startsWith('./images/') && !item.url.startsWith('/images/'))){
-          item.url = 'images/' + item.file;
-        }
-        const card = renderCard(item);
-        G.appendChild(card);
+        card.appendChild(image);
+        card.appendChild(info);
+        gallery.appendChild(card);
       });
+    } catch (err) {
+      document.getElementById('gallery').textContent = "Eroare: " + err.message;
+      console.error(err);
     }
+  }
 
-    // search filter
-    const search = document.getElementById('search');
-    search.addEventListener('input', ()=> {
-      const q = search.value.trim().toLowerCase();
-      if(!window.IMAGES) return;
-      if(!q) return renderGallery(window.IMAGES);
-      const filtered = window.IMAGES.filter(i => {
-        const name = (i.file || '').toLowerCase();
-        const country = (i.country || '').toLowerCase();
-        const phot = (i.photographer || '').toLowerCase();
-        const tags = (i.tags || []).join(' ').toLowerCase();
-        return name.includes(q) || country.includes(q) || phot.includes(q) || tags.includes(q);
-      });
-      renderGallery(filtered);
-    });
-
-    // history back handling: close lightbox on popstate without photo
-    window.addEventListener('popstate', (e)=>{
-      const q = new URLSearchParams(location.search).get('photo');
-      if(!q) closeLightbox();
-    });
-
-    // start
-    loadManifest();
-  })();
+  loadImages();
   </script>
 </body>
 </html>
