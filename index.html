@@ -4,15 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Portofoliu Foto — Titus Emanuel Ilieși</title>
-  <meta name="description" content="Portofoliu foto — imaginile se încarcă automat din folderul images/ folosind images.json.">
-
+  <meta name="description" content="Portofoliu foto încărcat automat din repository GitHub.">
   <style>
     body {font-family: Arial, sans-serif; margin:0; padding:0; background:#f9f9f9;}
     header {background:#222; color:white; padding:20px; text-align:center;}
     h1 {margin:0; font-size:24px;}
     #gallery {display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:15px; padding:20px;}
     .card {background:white; border-radius:8px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.1);}
-    .card img {width:100%; display:block; height:200px; object-fit:cover; user-select:none; pointer-events:none;}
+    .card img {width:100%; display:block; height:200px; object-fit:cover; user-select:none;}
     .card .info {padding:10px; font-size:14px; color:#333;}
     .card .title {font-weight:bold; margin-bottom:4px;}
   </style>
@@ -31,41 +30,39 @@
   <script>
   async function loadImages() {
     try {
-      const res = await fetch('images.json');
-      if (!res.ok) throw new Error("Nu s-a putut încărca images.json");
-      const data = await res.json();
+      // API GitHub: ia lista fișierelor din folderul images/
+      const res = await fetch("https://api.github.com/repos/titusemanuel/titusemanuel.ro/contents/images");
+      if (!res.ok) throw new Error("Nu s-a putut încărca lista de imagini");
+      const files = await res.json();
 
-      const gallery = document.getElementById('gallery');
-      gallery.innerHTML = ''; // curăță placeholderul
+      const gallery = document.getElementById("gallery");
+      gallery.innerHTML = "";
 
-      data.forEach(img => {
-        const card = document.createElement('div');
-        card.className = 'card';
+      files
+        .filter(f => f.name.match(/\.(jpg|jpeg|png|gif)$/i)) // doar imagini
+        .forEach(f => {
+          const card = document.createElement("div");
+          card.className = "card";
 
-        const image = document.createElement('img');
-        image.src = img.url || ('images/' + img.file);
-        image.alt = img.file.replace(/\.[^/.]+$/, '').replace(/[-_]/g,' ');
+          const image = document.createElement("img");
+          image.src = f.download_url; // link direct GitHub
+          image.alt = f.name.replace(/\.[^/.]+$/, "").replace(/[-_()]/g, " ");
 
-        const info = document.createElement('div');
-        info.className = 'info';
+          const info = document.createElement("div");
+          info.className = "info";
 
-        const title = document.createElement('div');
-        title.className = 'title';
-        title.textContent = image.alt;
+          const title = document.createElement("div");
+          title.className = "title";
+          title.textContent = image.alt;
 
-        const details = document.createElement('div');
-        details.textContent = (img.country || '') + ' • ' + (img.photographer || '') + 
-          (img.width ? ` • ${img.width}x${img.height}` : '');
+          info.appendChild(title);
+          card.appendChild(image);
+          card.appendChild(info);
+          gallery.appendChild(card);
+        });
 
-        info.appendChild(title);
-        info.appendChild(details);
-
-        card.appendChild(image);
-        card.appendChild(info);
-        gallery.appendChild(card);
-      });
     } catch (err) {
-      document.getElementById('gallery').textContent = "Eroare: " + err.message;
+      document.getElementById("gallery").textContent = "Eroare: " + err.message;
       console.error(err);
     }
   }
