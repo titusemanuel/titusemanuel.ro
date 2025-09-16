@@ -4,7 +4,27 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Portofoliu Foto — Titus Emanuel Ilieși</title>
-  <meta name="description" content="Portofoliu foto încărcat automat din repository GitHub.">
+  <meta name="description" content="Portofoliu foto al lui Titus Emanuel Ilieși — galerie de imagini încărcată automat din repository GitHub.">
+  <meta name="keywords" content="portofoliu foto, fotografie, Titus Emanuel Ilieși, imagini, galerie foto, GitHub">
+  <meta property="og:title" content="Portofoliu Foto — Titus Emanuel Ilieși">
+  <meta property="og:description" content="Vezi portofoliul foto al lui Titus Emanuel Ilieși, galerie de imagini încărcată automat din repository GitHub.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://titusemanuel.github.io/titusemanuel.ro/">
+  <meta property="og:image" content="https://titusemanuel.github.io/titusemanuel.ro/images/profil-titus%20(1).jpg">
+  <meta name="author" content="Titus Emanuel Ilieși">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Titus Emanuel Ilieși",
+    "jobTitle": "Fotograf",
+    "url": "https://titusemanuel.github.io/titusemanuel.ro/",
+    "image": "https://titusemanuel.github.io/titusemanuel.ro/images/profil-titus%20(1).jpg",
+    "sameAs": [
+      "https://github.com/titusemanuel"
+    ]
+  }
+  </script>
 
   <style>
     body {font-family: Arial, sans-serif; margin:0; padding:0; background:#f9f9f9;}
@@ -26,14 +46,25 @@
       justify-content:center;
       align-items:center;
       z-index:9999;
+      flex-direction:column;
     }
     #lightbox img {
       max-width:90%;
-      max-height:90%;
+      max-height:80%;
       border-radius:8px;
       box-shadow:0 4px 20px rgba(0,0,0,0.5);
     }
-    #lightbox:target {display:flex;}
+    #lightbox .controls {
+      margin-top:10px;
+      text-align:center;
+    }
+    .btn {
+      color:white;
+      font-size:30px;
+      margin:0 15px;
+      cursor:pointer;
+      user-select:none;
+    }
 
     footer {
       background:#222;
@@ -58,6 +89,10 @@
   <!-- Lightbox -->
   <div id="lightbox">
     <img src="" alt="">
+    <div class="controls">
+      <span class="btn" id="prev">&#10094;</span>
+      <span class="btn" id="next">&#10095;</span>
+    </div>
   </div>
 
   <footer>
@@ -65,6 +100,9 @@
   </footer>
 
   <script>
+  let images = [];
+  let currentIndex = 0;
+
   async function loadImages() {
     try {
       const res = await fetch("https://api.github.com/repos/titusemanuel/titusemanuel.ro/contents/images");
@@ -74,49 +112,76 @@
       const gallery = document.getElementById("gallery");
       gallery.innerHTML = "";
 
-      files
-        .filter(f => f.name.match(/\.(jpg|jpeg|png|gif)$/i))
-        .forEach(f => {
-          const card = document.createElement("div");
-          card.className = "card";
+      images = files.filter(f => f.name.match(/\.(jpg|jpeg|png|gif)$/i));
 
-          const image = document.createElement("img");
-          image.src = f.download_url;
-          image.alt = f.name.replace(/\.[^/.]+$/, "").replace(/[-_()]/g, " ");
+      images.forEach((f, index) => {
+        const card = document.createElement("div");
+        card.className = "card";
 
-          const info = document.createElement("div");
-          info.className = "info";
+        const image = document.createElement("img");
+        image.src = f.download_url;
+        image.alt = f.name.replace(/\.[^/.]+$/, "").replace(/[-_()]/g, " ");
 
-          const title = document.createElement("div");
-          title.className = "title";
-          title.textContent = image.alt;
+        const info = document.createElement("div");
+        info.className = "info";
 
-          info.appendChild(title);
-          card.appendChild(image);
-          card.appendChild(info);
-          gallery.appendChild(card);
+        const title = document.createElement("div");
+        title.className = "title";
+        title.textContent = image.alt;
 
-          // click -> lightbox
-          card.addEventListener("click", () => {
-            const lb = document.getElementById("lightbox");
-            const lbImg = lb.querySelector("img");
-            lbImg.src = image.src;
-            lbImg.alt = image.alt;
-            lb.style.display = "flex";
-          });
-        });
+        info.appendChild(title);
+        card.appendChild(image);
+        card.appendChild(info);
+        gallery.appendChild(card);
 
-      // închidere lightbox
+        // click -> lightbox
+        card.addEventListener("click", () => openLightbox(index));
+      });
+
+      // controale lightbox
+      document.getElementById("prev").addEventListener("click", showPrev);
+      document.getElementById("next").addEventListener("click", showNext);
+
+      // închidere la click fundal
       const lb = document.getElementById("lightbox");
-      lb.addEventListener("click", () => lb.style.display = "none");
+      lb.addEventListener("click", e => {
+        if (e.target.id === "lightbox") closeLightbox();
+      });
+
+      // taste navigare
       document.addEventListener("keydown", e => {
-        if (e.key === "Escape") lb.style.display = "none";
+        if (e.key === "Escape") closeLightbox();
+        if (e.key === "ArrowRight") showNext();
+        if (e.key === "ArrowLeft") showPrev();
       });
 
     } catch (err) {
       document.getElementById("gallery").textContent = "Eroare: " + err.message;
       console.error(err);
     }
+  }
+
+  function openLightbox(index) {
+    currentIndex = index;
+    const lb = document.getElementById("lightbox");
+    const lbImg = lb.querySelector("img");
+    lbImg.src = images[index].download_url;
+    lbImg.alt = images[index].name.replace(/\.[^/.]+$/, "").replace(/[-_()]/g, " ");
+    lb.style.display = "flex";
+  }
+
+  function closeLightbox() {
+    document.getElementById("lightbox").style.display = "none";
+  }
+
+  function showNext() {
+    currentIndex = (currentIndex + 1) % images.length;
+    openLightbox(currentIndex);
+  }
+
+  function showPrev() {
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    openLightbox(currentIndex);
   }
 
   loadImages();
