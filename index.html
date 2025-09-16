@@ -5,15 +5,43 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Portofoliu Foto — Titus Emanuel Ilieși</title>
   <meta name="description" content="Portofoliu foto încărcat automat din repository GitHub.">
+
   <style>
     body {font-family: Arial, sans-serif; margin:0; padding:0; background:#f9f9f9;}
     header {background:#222; color:white; padding:20px; text-align:center;}
     h1 {margin:0; font-size:24px;}
     #gallery {display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:15px; padding:20px;}
-    .card {background:white; border-radius:8px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.1);}
+    .card {background:white; border-radius:8px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.1); cursor:pointer;}
     .card img {width:100%; display:block; height:200px; object-fit:cover; user-select:none;}
     .card .info {padding:10px; font-size:14px; color:#333;}
     .card .title {font-weight:bold; margin-bottom:4px;}
+
+    /* Lightbox */
+    #lightbox {
+      position: fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      background:rgba(0,0,0,0.9);
+      display:none;
+      justify-content:center;
+      align-items:center;
+      z-index:9999;
+    }
+    #lightbox img {
+      max-width:90%;
+      max-height:90%;
+      border-radius:8px;
+      box-shadow:0 4px 20px rgba(0,0,0,0.5);
+    }
+    #lightbox:target {display:flex;}
+
+    footer {
+      background:#222;
+      color:white;
+      text-align:center;
+      padding:15px;
+      font-size:14px;
+    }
   </style>
 </head>
 <body>
@@ -27,10 +55,18 @@
     </section>
   </main>
 
+  <!-- Lightbox -->
+  <div id="lightbox">
+    <img src="" alt="">
+  </div>
+
+  <footer>
+    &copy; 2025 Titus Emanuel Ilieși. Toate drepturile rezervate.
+  </footer>
+
   <script>
   async function loadImages() {
     try {
-      // API GitHub: ia lista fișierelor din folderul images/
       const res = await fetch("https://api.github.com/repos/titusemanuel/titusemanuel.ro/contents/images");
       if (!res.ok) throw new Error("Nu s-a putut încărca lista de imagini");
       const files = await res.json();
@@ -39,13 +75,13 @@
       gallery.innerHTML = "";
 
       files
-        .filter(f => f.name.match(/\.(jpg|jpeg|png|gif)$/i)) // doar imagini
+        .filter(f => f.name.match(/\.(jpg|jpeg|png|gif)$/i))
         .forEach(f => {
           const card = document.createElement("div");
           card.className = "card";
 
           const image = document.createElement("img");
-          image.src = f.download_url; // link direct GitHub
+          image.src = f.download_url;
           image.alt = f.name.replace(/\.[^/.]+$/, "").replace(/[-_()]/g, " ");
 
           const info = document.createElement("div");
@@ -59,7 +95,23 @@
           card.appendChild(image);
           card.appendChild(info);
           gallery.appendChild(card);
+
+          // click -> lightbox
+          card.addEventListener("click", () => {
+            const lb = document.getElementById("lightbox");
+            const lbImg = lb.querySelector("img");
+            lbImg.src = image.src;
+            lbImg.alt = image.alt;
+            lb.style.display = "flex";
+          });
         });
+
+      // închidere lightbox
+      const lb = document.getElementById("lightbox");
+      lb.addEventListener("click", () => lb.style.display = "none");
+      document.addEventListener("keydown", e => {
+        if (e.key === "Escape") lb.style.display = "none";
+      });
 
     } catch (err) {
       document.getElementById("gallery").textContent = "Eroare: " + err.message;
