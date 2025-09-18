@@ -415,9 +415,8 @@ Dacă vrei, pot:
 * sau pot trimite un `upload admin` folosind Firebase/Netlify (îți pregătesc exemplul complet).
 
 Spune-mi ce preferi și continui cu varianta dorită.
-   /* style.css */
 .logo {
-  max-height: 60px;
+  max-height: 120px;
+  max-width: 200px; /* ajustează după cum vrei */
   margin-bottom: 10px;
 }
-
