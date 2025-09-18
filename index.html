@@ -23,8 +23,8 @@
     "image": "https://titusemanuel.github.io/titusemanuel.ro/images/profil-titus%20(1).jpg",
     "sameAs": [
       "https://github.com/titusemanuel",
-      "https://instagram.com/USERNAME", 
-      "https://facebook.com/USERNAME",
+      "https://instagram.com/titusemanuell", 
+      "https://facebook.com/titusemanueliliesi",
       "mailto:titusemanueliliesi28@gmail.com"
     ]
   }
@@ -45,6 +45,7 @@
       font-size:14px;
       text-decoration:none;
       transition:background 0.2s;
+      cursor:pointer;
     }
     .social-links a:hover {background:#666;}
     #gallery {display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:15px; padding:20px;}
@@ -97,11 +98,10 @@
   <header>
     <h1>Portofoliu Foto — Titus Emanuel Ilieși</h1>
     <div class="social-links">
-  <a href="#" onclick="openLink('https://www.instagram.com/titusemanuell')">Instagram</a>
-  <a href="#" onclick="openLink('https://www.facebook.com/titusemanueliliesi')">Facebook</a>
-  <a href="#" onclick="openLink('mailto:titusemanueliliesi28@gmail.com')">Email</a>
-</div>
-
+      <a href="#" onclick="openLink('https://www.instagram.com/titusemanuell')">Instagram</a>
+      <a href="#" onclick="openLink('https://www.facebook.com/titusemanueliliesi')">Facebook</a>
+      <a href="#" onclick="openLink('mailto:titusemanueliliesi28@gmail.com')">Email</a>
+    </div>
   </header>
 
   <main>
@@ -121,12 +121,11 @@
 
   <footer>
     &copy; 2025 Titus Emanuel Ilieși. Toate drepturile rezervate.
-   <div class="social-links">
-  <a href="#" onclick="openLink('https://www.instagram.com/titusemanuell')">Instagram</a>
-  <a href="#" onclick="openLink('https://www.facebook.com/titusemanueliliesi')">Facebook</a>
-  <a href="#" onclick="openLink('mailto:titusemanueliliesi28@gmail.com')">Email</a>
-</div>
-
+    <div class="social-links">
+      <a href="#" onclick="openLink('https://www.instagram.com/titusemanuell')">Instagram</a>
+      <a href="#" onclick="openLink('https://www.facebook.com/titusemanueliliesi')">Facebook</a>
+      <a href="#" onclick="openLink('mailto:titusemanueliliesi28@gmail.com')">Email</a>
+    </div>
   </footer>
 
   <script>
@@ -212,6 +211,11 @@
   function showPrev() {
     currentIndex = (currentIndex - 1 + images.length) % images.length;
     openLightbox(currentIndex);
+  }
+
+  // funcție protecție linkuri sociale
+  function openLink(url) {
+    window.open(url, '_blank');
   }
 
   loadImages();
