@@ -12,6 +12,7 @@
   <meta property="og:url" content="https://titusemanuel.github.io/titusemanuel.ro/">
   <meta property="og:image" content="https://titusemanuel.github.io/titusemanuel.ro/images/profil-titus%20(1).jpg">
   <meta name="author" content="Titus Emanuel Ilieși">
+
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -21,7 +22,10 @@
     "url": "https://titusemanuel.github.io/titusemanuel.ro/",
     "image": "https://titusemanuel.github.io/titusemanuel.ro/images/profil-titus%20(1).jpg",
     "sameAs": [
-      "https://github.com/titusemanuel"
+      "https://github.com/titusemanuel",
+      "https://instagram.com/USERNAME", 
+      "https://facebook.com/USERNAME",
+      "mailto:email@exemplu.com"
     ]
   }
   </script>
@@ -30,6 +34,19 @@
     body {font-family: Arial, sans-serif; margin:0; padding:0; background:#f9f9f9;}
     header {background:#222; color:white; padding:20px; text-align:center;}
     h1 {margin:0; font-size:24px;}
+    .social-links {margin-top:10px;}
+    .social-links a {
+      display:inline-block;
+      margin:0 8px;
+      padding:6px 12px;
+      border-radius:6px;
+      background:#444;
+      color:white;
+      font-size:14px;
+      text-decoration:none;
+      transition:background 0.2s;
+    }
+    .social-links a:hover {background:#666;}
     #gallery {display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:15px; padding:20px;}
     .card {background:white; border-radius:8px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.1); cursor:pointer;}
     .card img {width:100%; display:block; height:200px; object-fit:cover; user-select:none;}
@@ -73,11 +90,18 @@
       padding:15px;
       font-size:14px;
     }
+    footer .social-links {margin-top:10px;}
   </style>
 </head>
 <body>
   <header>
     <h1>Portofoliu Foto — Titus Emanuel Ilieși</h1>
+    <div class="social-links">
+      <!-- Înlocuiește cu datele tale -->
+      <a href="https://www.instagram.com/titusemanuell" target="_blank">Instagram</a>
+      <a href="https://www.facebook.com/titusemanueliliesi" target="_blank">Facebook</a>
+      <a href="titusemanueliliesi28@gmail.com">Email</a>
+    </div>
   </header>
 
   <main>
@@ -97,6 +121,12 @@
 
   <footer>
     &copy; 2025 Titus Emanuel Ilieși. Toate drepturile rezervate.
+    <div class="social-links">
+      <!-- Linkuri și în footer -->
+      <a href="https://www.instagram.com/titusemanuell" target="_blank">Instagram</a>
+      <a href="https://www.facebook.com/titusemanueliliesi" target="_blank">Facebook</a>
+      <a href="titusemanueliliesi28@gmail.com">Email</a>
+    </div>
   </footer>
 
   <script>
