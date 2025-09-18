@@ -50,7 +50,7 @@
     .social-links a:hover {background:#666;}
     #gallery {display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:15px; padding:20px;}
     .card {background:white; border-radius:8px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.1); cursor:pointer;}
-    .card img {width:100%; display:block; height:200px; object-fit:cover; user-select:none;}
+    .card img {width:100%; display:block; height:200px; object-fit:cover; user-select:none; -webkit-user-drag: none;}
     .card .info {padding:10px; font-size:14px; color:#333;}
     .card .title {font-weight:bold; margin-bottom:4px;}
 
@@ -71,6 +71,8 @@
       max-height:80%;
       border-radius:8px;
       box-shadow:0 4px 20px rgba(0,0,0,0.5);
+      user-select:none;
+      -webkit-user-drag: none;
     }
     #lightbox .controls {
       margin-top:10px;
@@ -217,6 +219,21 @@
   function openLink(url) {
     window.open(url, '_blank');
   }
+
+  // protecție anti-click dreapta pe imagini și pe pagină
+  document.addEventListener('contextmenu', function(e) {
+    if (e.target.tagName === 'IMG' || e.target.closest('#gallery') || e.target.closest('#lightbox')) {
+      e.preventDefault();
+      alert("Protecție activată: salvarea imaginilor nu este permisă.");
+    }
+  });
+
+  // blocare drag & drop imagini
+  document.addEventListener('dragstart', function(e) {
+    if (e.target.tagName === 'IMG') {
+      e.preventDefault();
+    }
+  });
 
   loadImages();
   </script>
