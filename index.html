@@ -1,14 +1,8 @@
 <!doctype html>
 <html lang="ro">
 <head>
-  <!-- index.html -->
-<head>
-  <link rel="stylesheet" href="style.css">
-</head>
-
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <img src="https://titusemanuel.github.io/titusemanuel.ro/logo.png" alt="Logo Titus Emanuel Ilieși" class="logo">
   <title>Portofoliu Foto — Titus Emanuel Ilieși</title>
   <meta name="description" content="Portofoliu foto al lui Titus Emanuel Ilieși — galerie de imagini încărcată automat din repository GitHub.">
   <meta name="keywords" content="portofoliu foto, fotografie, Titus Emanuel Ilieși, imagini, galerie foto, GitHub">
@@ -18,24 +12,6 @@
   <meta property="og:url" content="https://titusemanuel.github.io/titusemanuel.ro/">
   <meta property="og:image" content="https://titusemanuel.github.io/titusemanuel.ro/images/profil-titus%20(1).jpg">
   <meta name="author" content="Titus Emanuel Ilieși">
-
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "Titus Emanuel Ilieși",
-    "jobTitle": "Fotograf",
-    "url": "https://titusemanuel.github.io/titusemanuel.ro/",
-    "image": "https://titusemanuel.github.io/titusemanuel.ro/images/profil-titus%20(1).jpg",
-    "sameAs": [
-      "https://github.com/titusemanuel",
-       "https://www.mediafaxfoto.ro/Photos.aspx?fm=lSearch&q=EMANUEL%20TITUS%20ILIESI&pt=0&s=5,130,51,301,128,6,122,201",
-      "https://instagram.com/titusemanuell", 
-      "https://facebook.com/titusemanueliliesi",
-      "mailto:titusemanueliliesi28@gmail.com"
-    ]
-  }
-  </script>
 
   <style>
     body {font-family: Arial, sans-serif; margin:0; padding:0; background:#f9f9f9;}
@@ -60,46 +36,21 @@
     .card img {width:100%; display:block; height:200px; object-fit:cover; user-select:none; -webkit-user-drag: none;}
     .card .info {padding:10px; font-size:14px; color:#333;}
     .card .title {font-weight:bold; margin-bottom:4px;}
-
-    /* Lightbox */
     #lightbox {
-      position: fixed;
-      top:0; left:0;
+      position: fixed; top:0; left:0;
       width:100%; height:100%;
       background:rgba(0,0,0,0.9);
-      display:none;
-      justify-content:center;
-      align-items:center;
-      z-index:9999;
-      flex-direction:column;
+      display:none; justify-content:center; align-items:center;
+      z-index:9999; flex-direction:column;
     }
     #lightbox img {
-      max-width:90%;
-      max-height:80%;
-      border-radius:8px;
-      box-shadow:0 4px 20px rgba(0,0,0,0.5);
-      user-select:none;
-      -webkit-user-drag: none;
+      max-width:90%; max-height:80%;
+      border-radius:8px; box-shadow:0 4px 20px rgba(0,0,0,0.5);
+      user-select:none; -webkit-user-drag: none;
     }
-    #lightbox .controls {
-      margin-top:10px;
-      text-align:center;
-    }
-    .btn {
-      color:white;
-      font-size:30px;
-      margin:0 15px;
-      cursor:pointer;
-      user-select:none;
-    }
-
-    footer {
-      background:#222;
-      color:white;
-      text-align:center;
-      padding:15px;
-      font-size:14px;
-    }
+    #lightbox .controls {margin-top:10px; text-align:center;}
+    .btn {color:white; font-size:30px; margin:0 15px; cursor:pointer; user-select:none;}
+    footer {background:#222; color:white; text-align:center; padding:15px; font-size:14px;}
     footer .social-links {margin-top:10px;}
   </style>
 </head>
@@ -120,7 +71,6 @@
     </section>
   </main>
 
-  <!-- Lightbox -->
   <div id="lightbox">
     <img src="" alt="">
     <div class="controls">
@@ -140,111 +90,102 @@
   </footer>
 
   <script>
-  let images = [];
-  let currentIndex = 0;
+    let images = [];
+    let currentIndex = 0;
 
-  async function loadImages() {
-    try {
-      const res = await fetch("https://api.github.com/repos/titusemanuel/titusemanuel.ro/contents/images");
-      if (!res.ok) throw new Error("Nu s-a putut încărca lista de imagini");
-      const files = await res.json();
+    async function loadImages() {
+      try {
+        const res = await fetch("https://api.github.com/repos/titusemanuel/titusemanuel.ro/contents/images");
+        if (!res.ok) throw new Error("Nu s-a putut încărca lista de imagini");
+        const files = await res.json();
 
-      const gallery = document.getElementById("gallery");
-      gallery.innerHTML = "";
+        const gallery = document.getElementById("gallery");
+        gallery.innerHTML = "";
 
-      images = files.filter(f => f.name.match(/\.(jpg|jpeg|png|gif)$/i));
+        images = files.filter(f => f.name.match(/\.(jpg|jpeg|png|gif)$/i));
 
-      images.forEach((f, index) => {
-        const card = document.createElement("div");
-        card.className = "card";
+        images.forEach((f, index) => {
+          const card = document.createElement("div");
+          card.className = "card";
 
-        const image = document.createElement("img");
-        image.src = f.download_url;
-        image.alt = f.name.replace(/\.[^/.]+$/, "").replace(/[-_()]/g, " ");
+          const image = document.createElement("img");
+          image.src = f.download_url;
+          image.alt = f.name.replace(/\.[^/.]+$/, "").replace(/[-_()]/g, " ");
 
-        const info = document.createElement("div");
-        info.className = "info";
+          const info = document.createElement("div");
+          info.className = "info";
 
-        const title = document.createElement("div");
-        title.className = "title";
-        title.textContent = image.alt;
+          const title = document.createElement("div");
+          title.className = "title";
+          title.textContent = image.alt;
 
-        info.appendChild(title);
-        card.appendChild(image);
-        card.appendChild(info);
-        gallery.appendChild(card);
+          info.appendChild(title);
+          card.appendChild(image);
+          card.appendChild(info);
+          gallery.appendChild(card);
 
-        // click -> lightbox
-        card.addEventListener("click", () => openLightbox(index));
-      });
+          card.addEventListener("click", () => openLightbox(index));
+        });
 
-      // controale lightbox
-      document.getElementById("prev").addEventListener("click", showPrev);
-      document.getElementById("next").addEventListener("click", showNext);
+        document.getElementById("prev").addEventListener("click", showPrev);
+        document.getElementById("next").addEventListener("click", showNext);
 
-      // închidere la click fundal
+        const lb = document.getElementById("lightbox");
+        lb.addEventListener("click", e => {
+          if (e.target.id === "lightbox") closeLightbox();
+        });
+
+        document.addEventListener("keydown", e => {
+          if (e.key === "Escape") closeLightbox();
+          if (e.key === "ArrowRight") showNext();
+          if (e.key === "ArrowLeft") showPrev();
+        });
+
+      } catch (err) {
+        document.getElementById("gallery").textContent = "Eroare: " + err.message;
+        console.error(err);
+      }
+    }
+
+    function openLightbox(index) {
+      currentIndex = index;
       const lb = document.getElementById("lightbox");
-      lb.addEventListener("click", e => {
-        if (e.target.id === "lightbox") closeLightbox();
-      });
-
-      // taste navigare
-      document.addEventListener("keydown", e => {
-        if (e.key === "Escape") closeLightbox();
-        if (e.key === "ArrowRight") showNext();
-        if (e.key === "ArrowLeft") showPrev();
-      });
-
-    } catch (err) {
-      document.getElementById("gallery").textContent = "Eroare: " + err.message;
-      console.error(err);
+      const lbImg = lb.querySelector("img");
+      lbImg.src = images[index].download_url;
+      lbImg.alt = images[index].name.replace(/\.[^/.]+$/, "").replace(/[-_()]/g, " ");
+      lb.style.display = "flex";
     }
-  }
 
-  function openLightbox(index) {
-    currentIndex = index;
-    const lb = document.getElementById("lightbox");
-    const lbImg = lb.querySelector("img");
-    lbImg.src = images[index].download_url;
-    lbImg.alt = images[index].name.replace(/\.[^/.]+$/, "").replace(/[-_()]/g, " ");
-    lb.style.display = "flex";
-  }
+    function closeLightbox() {
+      document.getElementById("lightbox").style.display = "none";
+    }
 
-  function closeLightbox() {
-    document.getElementById("lightbox").style.display = "none";
-  }
+    function showNext() {
+      currentIndex = (currentIndex + 1) % images.length;
+      openLightbox(currentIndex);
+    }
 
-  function showNext() {
-    currentIndex = (currentIndex + 1) % images.length;
-    openLightbox(currentIndex);
-  }
+    function showPrev() {
+      currentIndex = (currentIndex - 1 + images.length) % images.length;
+      openLightbox(currentIndex);
+    }
 
-  function showPrev() {
-    currentIndex = (currentIndex - 1 + images.length) % images.length;
-    openLightbox(currentIndex);
-  }
+    function openLink(url) {
+      window.open(url, '_blank');
+    }
 
-  // funcție protecție linkuri sociale
-  function openLink(url) {
-    window.open(url, '_blank');
-  }
-
-  // protecție anti-click dreapta pe imagini și pe pagină
-  document.addEventListener('contextmenu', function(e) {
-    if (e.target.tagName === 'IMG' || e.target.closest('#gallery') || e.target.closest('#lightbox')) {
+    // Protecție click dreapta pe întreaga pagină
+    document.addEventListener('contextmenu', function(e) {
       e.preventDefault();
-      alert("Protecție activată: salvarea imaginilor nu este permisă.");
-    }
-  });
+      alert("protecție");
+    });
 
-  // blocare drag & drop imagini
-  document.addEventListener('dragstart', function(e) {
-    if (e.target.tagName === 'IMG') {
-      e.preventDefault();
-    }
-  });
+    // Blocare drag & drop imagini
+    document.addEventListener('dragstart', function(e) {
+      if (e.target.tagName === 'IMG') e.preventDefault();
+    });
 
-  loadImages();
+    loadImages();
   </script>
 </body>
 </html>
