@@ -15,7 +15,7 @@
 
   <style>
     body {font-family: Arial, sans-serif; margin:0; padding:0; background:#f9f9f9;}
-    header {background:#222; color:white; padding:20px; text-align:center;}
+    header {background:#222; color:white; padding:20px; text-align:center; position: relative;}
     h1 {margin:0; font-size:24px;}
     .social-links {margin-top:10px;}
     .social-links a {
@@ -31,6 +31,37 @@
       cursor:pointer;
     }
     .social-links a:hover {background:#666;}
+
+    /* Instalație Crăciun */
+    .christmas-lights {
+      position: absolute;
+      top:0; left:0; right:0;
+      height:20px;
+      display:flex;
+      justify-content: center;
+      gap: 10px;
+      padding-top: 5px;
+      z-index: 1000;
+    }
+    .light {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: red;
+      box-shadow: 0 0 10px rgba(255,0,0,0.7);
+      animation: blink 1.5s infinite alternate;
+    }
+    .light:nth-child(2) {background: yellow; animation-delay: 0.2s; box-shadow: 0 0 10px rgba(255,255,0,0.7);}
+    .light:nth-child(3) {background: green; animation-delay: 0.4s; box-shadow: 0 0 10px rgba(0,255,0,0.7);}
+    .light:nth-child(4) {background: blue; animation-delay: 0.6s; box-shadow: 0 0 10px rgba(0,0,255,0.7);}
+    .light:nth-child(5) {background: purple; animation-delay: 0.8s; box-shadow: 0 0 10px rgba(128,0,128,0.7);}
+
+    @keyframes blink {
+      0% {opacity: 0.2; transform: scale(0.7);}
+      50% {opacity: 1; transform: scale(1.2);}
+      100% {opacity: 0.2; transform: scale(0.7);}
+    }
+
     #gallery {display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:15px; padding:20px;}
     .card {background:white; border-radius:8px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.1); cursor:pointer;}
     .card img {width:100%; display:block; height:200px; object-fit:cover; user-select:none; -webkit-user-drag: none;}
@@ -56,6 +87,13 @@
 </head>
 <body>
   <header>
+    <div class="christmas-lights">
+      <div class="light"></div>
+      <div class="light"></div>
+      <div class="light"></div>
+      <div class="light"></div>
+      <div class="light"></div>
+    </div>
     <h1>Portofoliu Foto — Titus Emanuel Ilieși</h1>
     <div class="social-links">
       <a href="#" onclick="openLink('https://www.instagram.com/titusemanuell')">Instagram</a>
@@ -174,13 +212,11 @@
       window.open(url, '_blank');
     }
 
-    // Protecție click dreapta pe întreaga pagină
     document.addEventListener('contextmenu', function(e) {
       e.preventDefault();
       alert("protecție");
     });
 
-    // Blocare drag & drop imagini
     document.addEventListener('dragstart', function(e) {
       if (e.target.tagName === 'IMG') e.preventDefault();
     });
