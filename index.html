@@ -1,227 +1,236 @@
 <!doctype html>
 <html lang="ro">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Portofoliu Foto — Titus Emanuel Ilieși</title>
-  <meta name="description" content="Portofoliu foto al lui Titus Emanuel Ilieși — galerie de imagini încărcată automat din repository GitHub.">
-  <meta name="keywords" content="portofoliu foto, fotografie, Titus Emanuel Ilieși, imagini, galerie foto, GitHub">
-  <meta property="og:title" content="Portofoliu Foto — Titus Emanuel Ilieși">
-  <meta property="og:description" content="Vezi portofoliul foto al lui Titus Emanuel Ilieși, galerie de imagini încărcată automat din repository GitHub.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://titusemanuel.github.io/titusemanuel.ro/">
-  <meta property="og:image" content="https://titusemanuel.github.io/titusemanuel.ro/images/profil-titus%20(1).jpg">
-  <meta name="author" content="Titus Emanuel Ilieși">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <style>
-    body {font-family: Arial, sans-serif; margin:0; padding:0; background:#f9f9f9;}
-    header {background:#222; color:white; padding:20px; text-align:center; position: relative;}
-    h1 {margin:0; font-size:24px;}
-    .social-links {margin-top:10px;}
-    .social-links a {
-      display:inline-block;
-      margin:0 8px;
-      padding:6px 12px;
-      border-radius:6px;
-      background:#444;
-      color:white;
-      font-size:14px;
-      text-decoration:none;
-      transition:background 0.2s;
-      cursor:pointer;
-    }
-    .social-links a:hover {background:#666;}
+<title>Titus Emanuel Ilieși — Photojournalist</title>
+<meta name="description" content="Portofoliu foto — Titus Emanuel Ilieși. Galerie de imagini cu protecție.">
+<meta name="author" content="Titus Emanuel Ilieși">
 
-    /* Instalație Crăciun */
-    .christmas-lights {
-      position: absolute;
-      top:0; left:0; right:0;
-      height:20px;
-      display:flex;
-      justify-content: center;
-      gap: 10px;
-      padding-top: 5px;
-      z-index: 1000;
-    }
-    .light {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: red;
-      box-shadow: 0 0 10px rgba(255,0,0,0.7);
-      animation: blink 1.5s infinite alternate;
-    }
-    .light:nth-child(2) {background: yellow; animation-delay: 0.2s; box-shadow: 0 0 10px rgba(255,255,0,0.7);}
-    .light:nth-child(3) {background: green; animation-delay: 0.4s; box-shadow: 0 0 10px rgba(0,255,0,0.7);}
-    .light:nth-child(4) {background: blue; animation-delay: 0.6s; box-shadow: 0 0 10px rgba(0,0,255,0.7);}
-    .light:nth-child(5) {background: purple; animation-delay: 0.8s; box-shadow: 0 0 10px rgba(128,0,128,0.7);}
+<style>
+* {box-sizing:border-box}
 
-    @keyframes blink {
-      0% {opacity: 0.2; transform: scale(0.7);}
-      50% {opacity: 1; transform: scale(1.2);}
-      100% {opacity: 0.2; transform: scale(0.7);}
-    }
+body {
+  margin:0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background:#0e0e0e;
+  color:#fff;
+}
 
-    #gallery {display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:15px; padding:20px;}
-    .card {background:white; border-radius:8px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.1); cursor:pointer;}
-    .card img {width:100%; display:block; height:200px; object-fit:cover; user-select:none; -webkit-user-drag: none;}
-    .card .info {padding:10px; font-size:14px; color:#333;}
-    .card .title {font-weight:bold; margin-bottom:4px;}
-    #lightbox {
-      position: fixed; top:0; left:0;
-      width:100%; height:100%;
-      background:rgba(0,0,0,0.9);
-      display:none; justify-content:center; align-items:center;
-      z-index:9999; flex-direction:column;
-    }
-    #lightbox img {
-      max-width:90%; max-height:80%;
-      border-radius:8px; box-shadow:0 4px 20px rgba(0,0,0,0.5);
-      user-select:none; -webkit-user-drag: none;
-    }
-    #lightbox .controls {margin-top:10px; text-align:center;}
-    .btn {color:white; font-size:30px; margin:0 15px; cursor:pointer; user-select:none;}
-    footer {background:#222; color:white; text-align:center; padding:15px; font-size:14px;}
-    footer .social-links {margin-top:10px;}
-  </style>
+/* HEADER */
+header {
+  padding:40px 20px;
+  text-align:center;
+  border-bottom:1px solid #222;
+}
+
+header h1 {
+  font-size:28px;
+  font-weight:600;
+  margin:0;
+}
+
+header p {
+  margin:10px 0 0;
+  color:#aaa;
+  font-size:15px;
+}
+
+.nav {
+  margin-top:20px;
+}
+
+.nav a {
+  color:#fff;
+  text-decoration:none;
+  margin:0 10px;
+  font-size:14px;
+  opacity:.8;
+}
+
+.nav a:hover {opacity:1}
+
+/* GALERIE */
+#gallery {
+  padding:30px;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:20px;
+}
+
+.card {
+  position:relative;
+  overflow:hidden;
+  background:#111;
+}
+
+.card img {
+  width:100%;
+  height:360px;
+  object-fit:cover;
+  transition:transform .4s ease;
+  user-select:none;
+  -webkit-user-drag:none;
+}
+
+.card:hover img {
+  transform:scale(1.04);
+}
+
+.card .caption {
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  padding:12px;
+  background:linear-gradient(to top, rgba(0,0,0,.7), transparent);
+  font-size:14px;
+}
+
+/* LIGHTBOX */
+#lightbox {
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.95);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+
+#lightbox img {
+  max-width:92%;
+  max-height:88%;
+  user-select:none;
+  -webkit-user-drag:none;
+}
+
+.lb-btn {
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  font-size:40px;
+  color:#fff;
+  cursor:pointer;
+  padding:20px;
+  opacity:.7;
+}
+
+.lb-btn:hover {opacity:1}
+
+#prev {left:10px}
+#next {right:10px}
+
+/* FOOTER */
+footer {
+  padding:25px;
+  text-align:center;
+  font-size:13px;
+  color:#888;
+  border-top:1px solid #222;
+}
+</style>
 </head>
+
 <body>
-  <header>
-    <div class="christmas-lights">
-      <div class="light"></div>
-      <div class="light"></div>
-      <div class="light"></div>
-      <div class="light"></div>
-      <div class="light"></div>
-    </div>
-    <h1>Portofoliu Foto — Titus Emanuel Ilieși</h1>
-    <div class="social-links">
-      <a href="#" onclick="openLink('https://www.instagram.com/titusemanuell')">Instagram</a>
-      <a href="#" onclick="openLink('https://www.facebook.com/titusemanueliliesi')">Facebook</a>
-      <a href="#" onclick="openLink('mailto:titusemanueliliesi28@gmail.com')">Email</a>
-      <a href="#" onclick="openLink('https://www.mediafaxfoto.ro/Photos.aspx?fm=lSearch&q=EMANUEL%20TITUS%20ILIESI&pt=0&s=5,130,51,301,128,6,122,201')">Mediafax Foto</a>
-    </div>
-  </header>
 
-  <main>
-    <section id="gallery">
-      <p>Se încarcă imaginile…</p>
-    </section>
-  </main>
+<header>
+  <h1>Titus Emanuel Ilieși</h1>
+  <p>Photojournalist • Documentary • Events</p>
 
-  <div id="lightbox">
-    <img src="" alt="">
-    <div class="controls">
-      <span class="btn" id="prev">&#10094;</span>
-      <span class="btn" id="next">&#10095;</span>
-    </div>
+  <div class="nav">
+    <a href="https://www.instagram.com/titusemanuell" target="_blank">Instagram</a>
+    <a href="https://www.facebook.com/titusemanueliliesi" target="_blank">Facebook</a>
+    <a href="https://www.mediafaxfoto.ro/" target="_blank">Mediafax Foto</a>
+    <a href="mailto:titusemanueliliesi28@gmail.com">Email</a>
   </div>
+</header>
 
-  <footer>
-    &copy; 2025 Titus Emanuel Ilieși. Toate drepturile rezervate.
-    <div class="social-links">
-      <a href="#" onclick="openLink('https://www.instagram.com/titusemanuell')">Instagram</a>
-      <a href="#" onclick="openLink('https://www.mediafaxfoto.ro/Photos.aspx?fm=lSearch&q=EMANUEL%20TITUS%20ILIESI&pt=0&s=5,130,51,301,128,6,122,201')">Mediafax Foto</a>
-      <a href="#" onclick="openLink('https://www.facebook.com/titusemanueliliesi')">Facebook</a>
-      <a href="#" onclick="openLink('mailto:titusemanueliliesi28@gmail.com')">Email</a>
-    </div>
-  </footer>
+<main>
+  <section id="gallery">
+    <p>Se încarcă imaginile…</p>
+  </section>
+</main>
 
-  <script>
-    let images = [];
-    let currentIndex = 0;
+<div id="lightbox">
+  <span class="lb-btn" id="prev">&#10094;</span>
+  <img src="" alt="">
+  <span class="lb-btn" id="next">&#10095;</span>
+</div>
 
-    async function loadImages() {
-      try {
-        const res = await fetch("https://api.github.com/repos/titusemanuel/titusemanuel.ro/contents/images");
-        if (!res.ok) throw new Error("Nu s-a putut încărca lista de imagini");
-        const files = await res.json();
+<footer>
+  © 2026 Titus Emanuel Ilieși — Toate drepturile rezervate
+</footer>
 
-        const gallery = document.getElementById("gallery");
-        gallery.innerHTML = "";
+<script>
+let images = [];
+let index = 0;
 
-        images = files.filter(f => f.name.match(/\.(jpg|jpeg|png|gif)$/i));
+async function loadImages() {
+  const res = await fetch("https://api.github.com/repos/titusemanuel/titusemanuel.ro/contents/images");
+  const files = await res.json();
 
-        images.forEach((f, index) => {
-          const card = document.createElement("div");
-          card.className = "card";
+  images = files.filter(f => /\.(jpg|jpeg|png)$/i.test(f.name));
 
-          const image = document.createElement("img");
-          image.src = f.download_url;
-          image.alt = f.name.replace(/\.[^/.]+$/, "").replace(/[-_()]/g, " ");
+  const gallery = document.getElementById("gallery");
+  gallery.innerHTML = "";
 
-          const info = document.createElement("div");
-          info.className = "info";
+  images.forEach((img, i) => {
+    const card = document.createElement("div");
+    card.className = "card";
 
-          const title = document.createElement("div");
-          title.className = "title";
-          title.textContent = image.alt;
+    const image = document.createElement("img");
+    image.src = img.download_url;
+    image.alt = img.name.replace(/\.[^/.]+$/, "");
 
-          info.appendChild(title);
-          card.appendChild(image);
-          card.appendChild(info);
-          gallery.appendChild(card);
+    const cap = document.createElement("div");
+    cap.className = "caption";
+    cap.textContent = image.alt;
 
-          card.addEventListener("click", () => openLightbox(index));
-        });
+    card.append(image, cap);
+    gallery.appendChild(card);
 
-        document.getElementById("prev").addEventListener("click", showPrev);
-        document.getElementById("next").addEventListener("click", showNext);
+    card.onclick = () => openLightbox(i);
+  });
+}
 
-        const lb = document.getElementById("lightbox");
-        lb.addEventListener("click", e => {
-          if (e.target.id === "lightbox") closeLightbox();
-        });
+function openLightbox(i) {
+  index = i;
+  const lb = document.getElementById("lightbox");
+  lb.querySelector("img").src = images[i].download_url;
+  lb.style.display = "flex";
+}
 
-        document.addEventListener("keydown", e => {
-          if (e.key === "Escape") closeLightbox();
-          if (e.key === "ArrowRight") showNext();
-          if (e.key === "ArrowLeft") showPrev();
-        });
+function closeLightbox() {
+  document.getElementById("lightbox").style.display = "none";
+}
 
-      } catch (err) {
-        document.getElementById("gallery").textContent = "Eroare: " + err.message;
-        console.error(err);
-      }
-    }
+function next() {
+  index = (index + 1) % images.length;
+  openLightbox(index);
+}
 
-    function openLightbox(index) {
-      currentIndex = index;
-      const lb = document.getElementById("lightbox");
-      const lbImg = lb.querySelector("img");
-      lbImg.src = images[index].download_url;
-      lbImg.alt = images[index].name.replace(/\.[^/.]+$/, "").replace(/[-_()]/g, " ");
-      lb.style.display = "flex";
-    }
+function prev() {
+  index = (index - 1 + images.length) % images.length;
+  openLightbox(index);
+}
 
-    function closeLightbox() {
-      document.getElementById("lightbox").style.display = "none";
-    }
+document.getElementById("next").onclick = next;
+document.getElementById("prev").onclick = prev;
 
-    function showNext() {
-      currentIndex = (currentIndex + 1) % images.length;
-      openLightbox(currentIndex);
-    }
+document.getElementById("lightbox").onclick = e => {
+  if (e.target.id === "lightbox") closeLightbox();
+};
 
-    function showPrev() {
-      currentIndex = (currentIndex - 1 + images.length) % images.length;
-      openLightbox(currentIndex);
-    }
+/* PROTECȚIE IMAGINI */
+document.addEventListener("contextmenu", e => e.preventDefault());
+document.addEventListener("dragstart", e => {
+  if (e.target.tagName === "IMG") e.preventDefault();
+});
 
-    function openLink(url) {
-      window.open(url, '_blank');
-    }
+loadImages();
+</script>
 
-    document.addEventListener('contextmenu', function(e) {
-      e.preventDefault();
-      alert("protecție");
-    });
-
-    document.addEventListener('dragstart', function(e) {
-      if (e.target.tagName === 'IMG') e.preventDefault();
-    });
-
-    loadImages();
-  </script>
 </body>
 </html>
