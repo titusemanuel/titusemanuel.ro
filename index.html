@@ -6,24 +6,21 @@
 
 <title>Titus Emanuel Ilieși — Photojournalist</title>
 
-<meta name="description" content="Portofoliu foto profesional. Photojournalist — Titus Emanuel Ilieși.">
-<meta name="robots" content="index, follow">
+<meta name="description" content="Photojournalist. Documentar. Evenimente. Portofoliu profesional.">
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 
 body{
-  font-family:system-ui,-apple-system,Segoe UI,Roboto;
+  font-family:system-ui;
   background:#0a0a0a;
   color:#fff;
   scroll-behavior:smooth;
-  user-select:none;
 }
 
 /* NAV */
 nav{
   position:fixed;
-  top:0;
   width:100%;
   padding:15px 30px;
   background:rgba(0,0,0,.6);
@@ -32,15 +29,6 @@ nav{
   justify-content:space-between;
   z-index:1000;
 }
-
-nav a{
-  color:#fff;
-  text-decoration:none;
-  margin-left:20px;
-  font-size:14px;
-  opacity:.7;
-}
-nav a:hover{opacity:1}
 
 /* HERO */
 .hero{
@@ -55,36 +43,44 @@ nav a:hover{opacity:1}
   height:100%;
   object-fit:cover;
   opacity:0;
-  filter:blur(10px);
-  transition:opacity 2s ease, filter 2s ease;
+  transition:opacity 2s ease;
 }
 
-.hero img.active{
-  opacity:1;
-  filter:blur(0);
-}
+.hero img.active{opacity:1}
 
-/* LOGO HERO */
 .hero-logo{
   position:absolute;
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
-  width:300px;
-  opacity:0.1;
+  width:280px;
+  opacity:.08;
 }
 
-/* DESPRE */
-#despre{
-  padding:80px 20px;
-  max-width:800px;
-  margin:auto;
-  text-align:center;
-}
-
-/* GALERIE */
-#gallery{
+/* CATEGORIES */
+.categories{
+  display:flex;
+  justify-content:center;
+  gap:20px;
   padding:40px;
+}
+
+.categories button{
+  background:#111;
+  border:1px solid #333;
+  color:#fff;
+  padding:10px 20px;
+  cursor:pointer;
+}
+
+.categories button.active{
+  background:#fff;
+  color:#000;
+}
+
+/* GALLERY */
+#gallery{
+  padding:20px;
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
   gap:20px;
@@ -92,15 +88,13 @@ nav a:hover{opacity:1}
 
 .card img{
   width:100%;
-  height:380px;
+  height:360px;
   object-fit:cover;
-  transition:.5s;
   cursor:pointer;
+  transition:.4s;
 }
 
-.card img:hover{
-  transform:scale(1.08);
-}
+.card img:hover{transform:scale(1.05)}
 
 /* LIGHTBOX */
 #lightbox{
@@ -110,52 +104,40 @@ nav a:hover{opacity:1}
   display:none;
   align-items:center;
   justify-content:center;
-  z-index:9999;
-  overflow:hidden;
 }
 
 #lightbox img{
   max-width:90%;
   max-height:90%;
-  transition:transform .3s ease;
 }
 
-/* WATERMARK */
 .lb-watermark{
   position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
   width:40%;
-  opacity:0.1;
-  pointer-events:none;
+  opacity:.1;
 }
 
 /* FOOTER */
-footer{
-  padding:30px;
-  text-align:center;
-  color:#777;
-}
+footer{text-align:center;padding:30px;color:#777}
 </style>
 </head>
 
 <body>
 
 <nav>
-  <div><strong>Titus Emanuel</strong></div>
+  <div>Titus Emanuel</div>
   <div>
-    <a href="#despre">Despre</a>
     <a href="#gallery">Portofoliu</a>
   </div>
 </nav>
 
 <section class="hero" id="hero"></section>
 
-<section id="despre">
-  <h2>Despre mine</h2>
-  <p>Photojournalist documentar. Emoție reală. Cadre autentice.</p>
-</section>
+<div class="categories">
+  <button onclick="loadCategory('evenimente')" class="active">Evenimente</button>
+  <button onclick="loadCategory('documentar')">Documentar</button>
+  <button onclick="loadCategory('presa')">Presă</button>
+</div>
 
 <section id="gallery"></section>
 
@@ -164,56 +146,35 @@ footer{
   <img src="logo.png" class="lb-watermark">
 </div>
 
-<footer>
-© 2026 Titus Emanuel Ilieși
-</footer>
+<footer>© 2026</footer>
 
 <script>
 let images=[];
 let current=0;
-let zoom=1;
-let startX=0;
+let currentCategory="evenimente";
 
-/* LOAD */
-async function load(){
-  const res=await fetch("https://api.github.com/repos/titusemanuel/titusemanuel.ro/contents/images");
+/* LOAD CATEGORY */
+async function loadCategory(cat){
+  currentCategory=cat;
+
+  const res=await fetch(`https://api.github.com/repos/titusemanuel/titusemanuel.ro/contents/images/${cat}`);
   const data=await res.json();
+
   images=data.filter(f=>/\.(jpg|png|jpeg)$/i.test(f.name));
+  renderGallery();
 
-  createHero();
-  createGallery();
+  document.querySelectorAll(".categories button").forEach(b=>b.classList.remove("active"));
+  event.target.classList.add("active");
 }
 
-/* HERO */
-function createHero(){
-  const hero=document.getElementById("hero");
-
-  images.slice(0,5).forEach((img,i)=>{
-    const image=document.createElement("img");
-    image.src=img.download_url;
-    if(i===0) image.classList.add("active");
-    hero.appendChild(image);
-  });
-
-  const logo=document.createElement("img");
-  logo.src="logo.png";
-  logo.className="hero-logo";
-  hero.appendChild(logo);
-
-  setInterval(()=>{
-    const imgs=hero.querySelectorAll("img:not(.hero-logo)");
-    imgs[current].classList.remove("active");
-    current=(current+1)%imgs.length;
-    imgs[current].classList.add("active");
-  },4000);
-}
-
-/* GALERIE */
-function createGallery(){
+/* GALLERY */
+function renderGallery(){
   const gallery=document.getElementById("gallery");
+  gallery.innerHTML="";
 
   images.forEach((img,i)=>{
     const card=document.createElement("div");
+    card.className="card";
 
     const image=document.createElement("img");
     image.src=img.download_url;
@@ -232,66 +193,64 @@ function openLightbox(i){
   const lb=document.getElementById("lightbox");
   lb.style.display="flex";
   document.getElementById("lb-img").src=images[i].download_url;
-  zoom=1;
-  updateZoom();
 }
 
 /* NAVIGATION */
+document.addEventListener("keydown",e=>{
+  if(e.key==="ArrowRight") next();
+  if(e.key==="ArrowLeft") prev();
+});
+
 function next(){
   current=(current+1)%images.length;
-  updateImage();
+  update();
 }
 
 function prev(){
   current=(current-1+images.length)%images.length;
-  updateImage();
+  update();
 }
 
-function updateImage(){
-  const img=document.getElementById("lb-img");
-  img.style.opacity=0;
-  setTimeout(()=>{
-    img.src=images[current].download_url;
-    img.style.opacity=1;
-  },200);
+function update(){
+  document.getElementById("lb-img").src=images[current].download_url;
 }
-
-/* ZOOM */
-function updateZoom(){
-  document.getElementById("lb-img").style.transform=`scale(${zoom})`;
-}
-
-document.getElementById("lb-img").onclick=()=>{
-  zoom = zoom===1 ? 2 : 1;
-  updateZoom();
-};
-
-/* SWIPE */
-document.getElementById("lightbox").addEventListener("touchstart",e=>{
-  startX=e.touches[0].clientX;
-});
-
-document.getElementById("lightbox").addEventListener("touchend",e=>{
-  let endX=e.changedTouches[0].clientX;
-  if(endX - startX > 50) prev();
-  if(startX - endX > 50) next();
-});
 
 /* CLOSE */
 document.getElementById("lightbox").onclick=e=>{
-  if(e.target.id==="lightbox"){
-    e.currentTarget.style.display="none";
-  }
+  if(e.target.id==="lightbox") e.currentTarget.style.display="none";
 };
 
-/* PROTECT */
-document.addEventListener("contextmenu",e=>e.preventDefault());
-document.addEventListener("dragstart",e=>e.preventDefault());
-document.addEventListener("keydown",e=>{
-  if(e.key==="F12") e.preventDefault();
-});
+/* HERO */
+async function loadHero(){
+  const res=await fetch(`https://api.github.com/repos/titusemanuel/titusemanuel.ro/contents/images/evenimente`);
+  const data=await res.json();
 
-load();
+  const hero=document.getElementById("hero");
+
+  data.slice(0,5).forEach((img,i)=>{
+    const image=document.createElement("img");
+    image.src=img.download_url;
+    if(i===0) image.classList.add("active");
+    hero.appendChild(image);
+  });
+
+  const logo=document.createElement("img");
+  logo.src="logo.png";
+  logo.className="hero-logo";
+  hero.appendChild(logo);
+
+  let i=0;
+  setInterval(()=>{
+    const imgs=hero.querySelectorAll("img:not(.hero-logo)");
+    imgs[i].classList.remove("active");
+    i=(i+1)%imgs.length;
+    imgs[i].classList.add("active");
+  },4000);
+}
+
+/* START */
+loadHero();
+loadCategory("evenimente");
 </script>
 
 </body>
