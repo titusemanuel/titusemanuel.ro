@@ -5,231 +5,264 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>Titus Emanuel Ilieși — Photojournalist</title>
-<meta name="description" content="Portofoliu foto — Titus Emanuel Ilieși. Galerie de imagini cu protecție.">
-<meta name="author" content="Titus Emanuel Ilieși">
 
 <style>
-* {box-sizing:border-box}
+*{box-sizing:border-box;margin:0;padding:0}
 
-body {
-  margin:0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  background:#0e0e0e;
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto;
+  background:#0b0b0b;
   color:#fff;
+  scroll-behavior:smooth;
 }
 
-/* HEADER */
-header {
-  padding:40px 20px;
-  text-align:center;
-  border-bottom:1px solid #222;
+/* NAV */
+nav{
+  position:fixed;
+  top:0;
+  width:100%;
+  padding:15px 30px;
+  background:rgba(0,0,0,.6);
+  backdrop-filter:blur(10px);
+  display:flex;
+  justify-content:space-between;
+  z-index:1000;
 }
 
-header h1 {
-  font-size:28px;
-  font-weight:600;
-  margin:0;
-}
-
-header p {
-  margin:10px 0 0;
-  color:#aaa;
-  font-size:15px;
-}
-
-.nav {
-  margin-top:20px;
-}
-
-.nav a {
+nav a{
   color:#fff;
   text-decoration:none;
-  margin:0 10px;
+  margin-left:20px;
   font-size:14px;
-  opacity:.8;
+  opacity:.7;
+}
+nav a:hover{opacity:1}
+
+/* HERO */
+.hero{
+  height:100vh;
+  position:relative;
+  overflow:hidden;
 }
 
-.nav a:hover {opacity:1}
+.hero img{
+  position:absolute;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  opacity:0;
+  transition:opacity 2s ease;
+}
+
+.hero img.active{
+  opacity:1;
+}
+
+/* LOGO HERO */
+.hero-logo{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:300px;
+  opacity:0.15;
+}
+
+/* TEXT HERO */
+.hero-text{
+  position:absolute;
+  bottom:60px;
+  left:40px;
+}
+
+.hero-text h1{font-size:40px}
+.hero-text p{opacity:.7}
+
+/* DESPRE */
+#despre{
+  padding:80px 20px;
+  max-width:800px;
+  margin:auto;
+  text-align:center;
+}
 
 /* GALERIE */
-#gallery {
-  padding:30px;
+#gallery{
+  padding:40px;
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
   gap:20px;
 }
 
-.card {
+.card{
   position:relative;
   overflow:hidden;
-  background:#111;
 }
 
-.card img {
+.card img{
   width:100%;
-  height:360px;
+  height:380px;
   object-fit:cover;
-  transition:transform .4s ease;
-  user-select:none;
-  -webkit-user-drag:none;
+  transition:.5s;
 }
 
-.card:hover img {
-  transform:scale(1.04);
+.card:hover img{
+  transform:scale(1.08);
 }
 
-.card .caption {
+/* WATERMARK */
+.watermark{
   position:absolute;
-  left:0;
-  right:0;
-  bottom:0;
-  padding:12px;
-  background:linear-gradient(to top, rgba(0,0,0,.7), transparent);
-  font-size:14px;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:50%;
+  opacity:0.08;
 }
 
 /* LIGHTBOX */
-#lightbox {
+#lightbox{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.95);
+  background:#000;
   display:none;
   align-items:center;
   justify-content:center;
   z-index:9999;
+  animation:fade .3s;
 }
 
-#lightbox img {
-  max-width:92%;
-  max-height:88%;
-  user-select:none;
-  -webkit-user-drag:none;
+#lightbox img{
+  max-width:90%;
+  max-height:90%;
+  animation:zoom .4s;
 }
 
-.lb-btn {
-  position:absolute;
-  top:50%;
-  transform:translateY(-50%);
-  font-size:40px;
-  color:#fff;
-  cursor:pointer;
-  padding:20px;
-  opacity:.7;
-}
-
-.lb-btn:hover {opacity:1}
-
-#prev {left:10px}
-#next {right:10px}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes zoom{from{transform:scale(.9)}to{transform:scale(1)}}
 
 /* FOOTER */
-footer {
-  padding:25px;
+footer{
+  padding:30px;
   text-align:center;
-  font-size:13px;
-  color:#888;
-  border-top:1px solid #222;
+  color:#777;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-  <h1>Titus Emanuel Ilieși</h1>
-  <p>Photojournalist • Documentary • Events</p>
-
-  <div class="nav">
-    <a href="https://www.instagram.com/titusemanuell" target="_blank">Instagram</a>
-    <a href="https://www.facebook.com/titusemanueliliesi" target="_blank">Facebook</a>
-    <a href="https://www.mediafaxfoto.ro/" target="_blank">Mediafax Foto</a>
-    <a href="mailto:titusemanueliliesi28@gmail.com">Email</a>
+<!-- NAV -->
+<nav>
+  <div><strong>Titus Emanuel</strong></div>
+  <div>
+    <a href="#despre">Despre</a>
+    <a href="#gallery">Portofoliu</a>
+    <a href="https://instagram.com/titusemanuell" target="_blank">Instagram</a>
   </div>
-</header>
+</nav>
 
-<main>
-  <section id="gallery">
-    <p>Se încarcă imaginile…</p>
-  </section>
-</main>
+<!-- HERO -->
+<section class="hero" id="hero"></section>
 
+<!-- DESPRE -->
+<section id="despre">
+  <h2>Despre mine</h2>
+  <p>
+    Photojournalist specializat în fotografie documentară și evenimente.
+    Capturând realitatea în forma ei autentică.
+  </p>
+</section>
+
+<!-- GALERIE -->
+<section id="gallery"></section>
+
+<!-- LIGHTBOX -->
 <div id="lightbox">
-  <span class="lb-btn" id="prev">&#10094;</span>
-  <img src="" alt="">
-  <span class="lb-btn" id="next">&#10095;</span>
+  <img src="">
 </div>
 
 <footer>
-  © 2026 Titus Emanuel Ilieși — Toate drepturile rezervate
+© 2026 Titus Emanuel Ilieși
 </footer>
 
 <script>
-let images = [];
-let index = 0;
+let images=[];
+let currentHero=0;
 
-async function loadImages() {
-  const res = await fetch("https://api.github.com/repos/titusemanuel/titusemanuel.ro/contents/images");
-  const files = await res.json();
+/* LOAD */
+async function load(){
+  const res=await fetch("https://api.github.com/repos/titusemanuel/titusemanuel.ro/contents/images");
+  const data=await res.json();
 
-  images = files.filter(f => /\.(jpg|jpeg|png)$/i.test(f.name));
+  images=data.filter(f=>/\.(jpg|png|jpeg)$/i.test(f.name));
 
-  const gallery = document.getElementById("gallery");
-  gallery.innerHTML = "";
+  createHero();
+  createGallery();
+}
 
-  images.forEach((img, i) => {
-    const card = document.createElement("div");
-    card.className = "card";
+/* HERO SLIDER */
+function createHero(){
+  const hero=document.getElementById("hero");
 
-    const image = document.createElement("img");
-    image.src = img.download_url;
-    image.alt = img.name.replace(/\.[^/.]+$/, "");
+  images.slice(0,5).forEach((img,i)=>{
+    const image=document.createElement("img");
+    image.src=img.download_url;
+    if(i===0) image.classList.add("active");
+    hero.appendChild(image);
+  });
 
-    const cap = document.createElement("div");
-    cap.className = "caption";
-    cap.textContent = image.alt;
+  const logo=document.createElement("img");
+  logo.src="logo.png";
+  logo.className="hero-logo";
+  hero.appendChild(logo);
 
-    card.append(image, cap);
+  setInterval(()=>{
+    const imgs=hero.querySelectorAll("img:not(.hero-logo)");
+    imgs[currentHero].classList.remove("active");
+    currentHero=(currentHero+1)%imgs.length;
+    imgs[currentHero].classList.add("active");
+  },4000);
+}
+
+/* GALERIE */
+function createGallery(){
+  const gallery=document.getElementById("gallery");
+
+  images.forEach((img,i)=>{
+    const card=document.createElement("div");
+    card.className="card";
+
+    const image=document.createElement("img");
+    image.src=img.download_url;
+    image.loading="lazy";
+
+    const watermark=document.createElement("img");
+    watermark.src="logo.png";
+    watermark.className="watermark";
+
+    card.append(image,watermark);
     gallery.appendChild(card);
 
-    card.onclick = () => openLightbox(i);
+    card.onclick=()=>openLightbox(img.download_url);
   });
 }
 
-function openLightbox(i) {
-  index = i;
-  const lb = document.getElementById("lightbox");
-  lb.querySelector("img").src = images[i].download_url;
-  lb.style.display = "flex";
+/* LIGHTBOX */
+function openLightbox(src){
+  const lb=document.getElementById("lightbox");
+  lb.style.display="flex";
+  lb.querySelector("img").src=src;
 }
 
-function closeLightbox() {
-  document.getElementById("lightbox").style.display = "none";
-}
-
-function next() {
-  index = (index + 1) % images.length;
-  openLightbox(index);
-}
-
-function prev() {
-  index = (index - 1 + images.length) % images.length;
-  openLightbox(index);
-}
-
-document.getElementById("next").onclick = next;
-document.getElementById("prev").onclick = prev;
-
-document.getElementById("lightbox").onclick = e => {
-  if (e.target.id === "lightbox") closeLightbox();
+document.getElementById("lightbox").onclick=()=>{
+  document.getElementById("lightbox").style.display="none";
 };
 
-/* PROTECȚIE IMAGINI */
-document.addEventListener("contextmenu", e => e.preventDefault());
-document.addEventListener("dragstart", e => {
-  if (e.target.tagName === "IMG") e.preventDefault();
-});
+/* PROTECT */
+document.addEventListener("contextmenu",e=>e.preventDefault());
 
-loadImages();
+load();
 </script>
 
 </body>
