@@ -6,14 +6,18 @@
 
 <title>Titus Emanuel Ilieși — Photojournalist</title>
 
+<meta name="description" content="Portofoliu foto profesional. Photojournalist — Titus Emanuel Ilieși.">
+<meta name="robots" content="index, follow">
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 
 body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto;
-  background:#0b0b0b;
+  background:#0a0a0a;
   color:#fff;
   scroll-behavior:smooth;
+  user-select:none;
 }
 
 /* NAV */
@@ -51,11 +55,13 @@ nav a:hover{opacity:1}
   height:100%;
   object-fit:cover;
   opacity:0;
-  transition:opacity 2s ease;
+  filter:blur(10px);
+  transition:opacity 2s ease, filter 2s ease;
 }
 
 .hero img.active{
   opacity:1;
+  filter:blur(0);
 }
 
 /* LOGO HERO */
@@ -65,18 +71,8 @@ nav a:hover{opacity:1}
   left:50%;
   transform:translate(-50%,-50%);
   width:300px;
-  opacity:0.15;
+  opacity:0.1;
 }
-
-/* TEXT HERO */
-.hero-text{
-  position:absolute;
-  bottom:60px;
-  left:40px;
-}
-
-.hero-text h1{font-size:40px}
-.hero-text p{opacity:.7}
 
 /* DESPRE */
 #despre{
@@ -94,30 +90,16 @@ nav a:hover{opacity:1}
   gap:20px;
 }
 
-.card{
-  position:relative;
-  overflow:hidden;
-}
-
 .card img{
   width:100%;
   height:380px;
   object-fit:cover;
   transition:.5s;
+  cursor:pointer;
 }
 
-.card:hover img{
+.card img:hover{
   transform:scale(1.08);
-}
-
-/* WATERMARK */
-.watermark{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  width:50%;
-  opacity:0.08;
 }
 
 /* LIGHTBOX */
@@ -129,17 +111,25 @@ nav a:hover{opacity:1}
   align-items:center;
   justify-content:center;
   z-index:9999;
-  animation:fade .3s;
+  overflow:hidden;
 }
 
 #lightbox img{
   max-width:90%;
   max-height:90%;
-  animation:zoom .4s;
+  transition:transform .3s ease;
 }
 
-@keyframes fade{from{opacity:0}to{opacity:1}}
-@keyframes zoom{from{transform:scale(.9)}to{transform:scale(1)}}
+/* WATERMARK */
+.lb-watermark{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:40%;
+  opacity:0.1;
+  pointer-events:none;
+}
 
 /* FOOTER */
 footer{
@@ -152,34 +142,26 @@ footer{
 
 <body>
 
-<!-- NAV -->
 <nav>
   <div><strong>Titus Emanuel</strong></div>
   <div>
     <a href="#despre">Despre</a>
     <a href="#gallery">Portofoliu</a>
-    <a href="https://instagram.com/titusemanuell" target="_blank">Instagram</a>
   </div>
 </nav>
 
-<!-- HERO -->
 <section class="hero" id="hero"></section>
 
-<!-- DESPRE -->
 <section id="despre">
   <h2>Despre mine</h2>
-  <p>
-    Photojournalist specializat în fotografie documentară și evenimente.
-    Capturând realitatea în forma ei autentică.
-  </p>
+  <p>Photojournalist documentar. Emoție reală. Cadre autentice.</p>
 </section>
 
-<!-- GALERIE -->
 <section id="gallery"></section>
 
-<!-- LIGHTBOX -->
 <div id="lightbox">
-  <img src="">
+  <img id="lb-img">
+  <img src="logo.png" class="lb-watermark">
 </div>
 
 <footer>
@@ -188,20 +170,21 @@ footer{
 
 <script>
 let images=[];
-let currentHero=0;
+let current=0;
+let zoom=1;
+let startX=0;
 
 /* LOAD */
 async function load(){
   const res=await fetch("https://api.github.com/repos/titusemanuel/titusemanuel.ro/contents/images");
   const data=await res.json();
-
   images=data.filter(f=>/\.(jpg|png|jpeg)$/i.test(f.name));
 
   createHero();
   createGallery();
 }
 
-/* HERO SLIDER */
+/* HERO */
 function createHero(){
   const hero=document.getElementById("hero");
 
@@ -219,9 +202,9 @@ function createHero(){
 
   setInterval(()=>{
     const imgs=hero.querySelectorAll("img:not(.hero-logo)");
-    imgs[currentHero].classList.remove("active");
-    currentHero=(currentHero+1)%imgs.length;
-    imgs[currentHero].classList.add("active");
+    imgs[current].classList.remove("active");
+    current=(current+1)%imgs.length;
+    imgs[current].classList.add("active");
   },4000);
 }
 
@@ -231,36 +214,82 @@ function createGallery(){
 
   images.forEach((img,i)=>{
     const card=document.createElement("div");
-    card.className="card";
 
     const image=document.createElement("img");
     image.src=img.download_url;
     image.loading="lazy";
 
-    const watermark=document.createElement("img");
-    watermark.src="logo.png";
-    watermark.className="watermark";
-
-    card.append(image,watermark);
+    card.appendChild(image);
     gallery.appendChild(card);
 
-    card.onclick=()=>openLightbox(img.download_url);
+    card.onclick=()=>openLightbox(i);
   });
 }
 
 /* LIGHTBOX */
-function openLightbox(src){
+function openLightbox(i){
+  current=i;
   const lb=document.getElementById("lightbox");
   lb.style.display="flex";
-  lb.querySelector("img").src=src;
+  document.getElementById("lb-img").src=images[i].download_url;
+  zoom=1;
+  updateZoom();
 }
 
-document.getElementById("lightbox").onclick=()=>{
-  document.getElementById("lightbox").style.display="none";
+/* NAVIGATION */
+function next(){
+  current=(current+1)%images.length;
+  updateImage();
+}
+
+function prev(){
+  current=(current-1+images.length)%images.length;
+  updateImage();
+}
+
+function updateImage(){
+  const img=document.getElementById("lb-img");
+  img.style.opacity=0;
+  setTimeout(()=>{
+    img.src=images[current].download_url;
+    img.style.opacity=1;
+  },200);
+}
+
+/* ZOOM */
+function updateZoom(){
+  document.getElementById("lb-img").style.transform=`scale(${zoom})`;
+}
+
+document.getElementById("lb-img").onclick=()=>{
+  zoom = zoom===1 ? 2 : 1;
+  updateZoom();
+};
+
+/* SWIPE */
+document.getElementById("lightbox").addEventListener("touchstart",e=>{
+  startX=e.touches[0].clientX;
+});
+
+document.getElementById("lightbox").addEventListener("touchend",e=>{
+  let endX=e.changedTouches[0].clientX;
+  if(endX - startX > 50) prev();
+  if(startX - endX > 50) next();
+});
+
+/* CLOSE */
+document.getElementById("lightbox").onclick=e=>{
+  if(e.target.id==="lightbox"){
+    e.currentTarget.style.display="none";
+  }
 };
 
 /* PROTECT */
 document.addEventListener("contextmenu",e=>e.preventDefault());
+document.addEventListener("dragstart",e=>e.preventDefault());
+document.addEventListener("keydown",e=>{
+  if(e.key==="F12") e.preventDefault();
+});
 
 load();
 </script>
