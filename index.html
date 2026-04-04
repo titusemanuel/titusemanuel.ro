@@ -3,17 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Portofoliu fotojurnalist Titus Emanuel Ilieși. Galerie web profesională, fotografie de eveniment și reportaj.">
-<meta name="keywords" content="Titus Emanuel, fotojurnalist, portofoliu foto, fotografie, web design">
-<meta name="robots" content="index, follow">
 
 <title>Titus Emanuel Ilieși — Photojournalist</title>
 
+<meta name="description" content="Portofoliu foto profesional. Fotojurnalism, evenimente și reportaj.">
+<meta name="keywords" content="fotograf, fotojurnalist, portofoliu foto, fotografie profesionala">
+<meta name="robots" content="index, follow">
+
+<!-- Open Graph (Facebook / Google) -->
+<meta property="og:title" content="Titus Emanuel Ilieși — Photojournalist">
+<meta property="og:description" content="Portofoliu foto profesional">
+<meta property="og:type" content="website">
+
 <style>
-/* Smooth scroll pentru meniu */
-html {
-  scroll-behavior: smooth;
-}
+html{scroll-behavior:smooth}
 
 *{box-sizing:border-box;margin:0;padding:0}
 
@@ -21,6 +24,7 @@ body{
   font-family:system-ui;
   background:#0a0a0a;
   color:#fff;
+  overflow-x:hidden;
 }
 
 /* NAV */
@@ -28,73 +32,96 @@ nav{
   position:fixed;
   width:100%;
   padding:15px 30px;
-  background:rgba(0,0,0,.8); /* Ușor mai întunecat pentru contrast */
+  background:rgba(0,0,0,.85);
   backdrop-filter:blur(10px);
   display:flex;
   justify-content:space-between;
-  align-items: center;
+  align-items:center;
   z-index:1000;
 }
 
-.nav-logo {
-  height: 40px; /* Dimensiunea logo-ului din meniu */
-  object-fit: contain;
+.nav-logo{
+  height:50px;
+  filter:invert(1);
+  transition:transform .3s;
 }
+.nav-logo:hover{transform:scale(1.1)}
 
-.nav-links {
-  list-style: none;
-  display: flex;
-  gap: 20px;
+.nav-links{
+  display:flex;
+  gap:20px;
+  list-style:none;
 }
-
-.nav-links a {
-  color: #fff;
-  text-decoration: none;
-  font-weight: 500;
-  text-transform: uppercase;
-  font-size: 14px;
-  letter-spacing: 1px;
-  transition: color 0.3s;
+.nav-links a{
+  color:#fff;
+  text-decoration:none;
+  font-size:14px;
+  letter-spacing:1px;
+  position:relative;
 }
-
-.nav-links a:hover {
-  color: #aaa;
+.nav-links a::after{
+  content:"";
+  position:absolute;
+  bottom:-5px;
+  left:0;
+  width:0;
+  height:1px;
+  background:#fff;
+  transition:.3s;
 }
+.nav-links a:hover::after{width:100%}
 
 /* HERO */
 .hero{
   height:100vh;
   position:relative;
+  overflow:hidden;
 }
 
-.hero img.bg-img {
+.hero img.bg{
   position:absolute;
   width:100%;
   height:100%;
   object-fit:cover;
   opacity:0;
-  transition:opacity 1.5s ease-in-out;
+  transform:scale(1.1);
+  transition:opacity 2s, transform 6s;
 }
 
-.hero img.bg-img.active{opacity:1}
+.hero img.active{
+  opacity:1;
+  transform:scale(1);
+}
 
 .hero-logo{
   position:absolute;
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
-  width:350px; /* Logo puțin mai mare pe prima pagină */
-  opacity:0.8; /* Vizibilitate mai bună a logo-ului pe poze */
-  z-index: 10;
-  pointer-events: none; /* Să nu interfereze cu nimic */
+  width:300px;
+  opacity:0.9;
+  z-index:10;
+  pointer-events:none;
+  filter:invert(1);
+  animation:fadeIn 2s ease;
+}
+
+@keyframes fadeIn{
+  from{opacity:0;transform:translate(-50%,-60%)}
+  to{opacity:0.9;transform:translate(-50%,-50%)}
 }
 
 /* GALLERY */
 #gallery{
-  padding:80px 20px 20px; /* Padding top adăugat ca să nu fie acoperit de navigație */
+  padding:100px 20px 20px;
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
   gap:20px;
+}
+
+.card{
+  position:relative;
+  overflow:hidden;
 }
 
 .card img{
@@ -102,46 +129,53 @@ nav{
   height:340px;
   object-fit:cover;
   cursor:pointer;
-  transition: transform 0.3s ease;
+  transition:transform .5s;
+  user-select:none;
+  -webkit-user-drag:none;
 }
 
-.card img:hover {
-  transform: scale(1.02); /* Un mic efect vizual la trecerea cu mouse-ul */
+.card:hover img{
+  transform:scale(1.05);
+}
+
+/* watermark */
+.card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:url('logo.png') center/40% no-repeat;
+  opacity:0.15;
+  pointer-events:none;
 }
 
 /* LIGHTBOX */
 #lightbox{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,0.95);
+  background:rgba(0,0,0,.95);
   display:none;
   align-items:center;
   justify-content:center;
-  z-index: 2000;
+  z-index:2000;
 }
 
-#lightbox img.main-img {
+#lightbox img{
   max-width:90%;
   max-height:90%;
-  box-shadow: 0 0 20px rgba(0,0,0,0.5);
 }
 
 .lb-watermark{
   position:absolute;
-  width:30%;
-  max-width: 400px;
-  opacity:0.5; /* Vizibilitate watermark */
-  pointer-events: none; /* IMPORTANT: ca să poți da click oriunde să închizi poza */
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
+  width:40%;
+  opacity:0.3;
+  pointer-events:none;
 }
 
+/* FOOTER */
 footer{
   text-align:center;
   padding:20px;
   color:#777;
-  font-size: 14px;
 }
 </style>
 </head>
@@ -149,9 +183,9 @@ footer{
 <body>
 
 <nav>
-  <a href="#hero"><img src="logo.png" alt="Titus Emanuel Logo" class="nav-logo"></a>
+  <a href="#hero"><img src="logo.png" class="nav-logo"></a>
   <ul class="nav-links">
-    <li><a href="#gallery">Galerie Foto</a></li>
+    <li><a href="#gallery">Galerie</a></li>
   </ul>
 </nav>
 
@@ -160,41 +194,37 @@ footer{
 <section id="gallery"></section>
 
 <div id="lightbox">
-  <img id="lb-img" class="main-img">
-  <img src="logo.png" class="lb-watermark" alt="Watermark">
+  <img id="lb-img">
+  <img src="logo.png" class="lb-watermark">
 </div>
 
-<footer>© 2026 Titus Emanuel Ilieși. Toate drepturile rezervate.</footer>
+<footer>© 2026 Titus Emanuel</footer>
 
 <script>
 let images=[];
 let current=0;
 
-/* LOAD IMAGES */
+/* LOAD */
 async function load(){
-  try {
-    const res=await fetch("https://api.github.com/repos/titusemanuel/titusemanuel.ro/contents/images");
-    const data=await res.json();
+  const res=await fetch("https://api.github.com/repos/titusemanuel/titusemanuel.ro/contents/images");
+  const data=await res.json();
 
-    images=data.filter(f=>/\.(jpg|jpeg|png)$/i.test(f.name));
+  images=data.filter(f=>/\.(jpg|jpeg|png)$/i.test(f.name));
 
-    createHero();
-    createGallery();
-  } catch (error) {
-    console.error("Eroare la încărcarea imaginilor:", error);
-  }
+  createHero();
+  createGallery();
 }
 
-/* HERO (Schimbă pozele singure) */
+/* HERO */
 function createHero(){
   const hero=document.getElementById("hero");
 
   images.slice(0,5).forEach((img,i)=>{
-    const image=document.createElement("img");
-    image.src=img.download_url;
-    image.classList.add("bg-img");
-    if(i===0) image.classList.add("active");
-    hero.appendChild(image);
+    const el=document.createElement("img");
+    el.src=img.download_url;
+    el.classList.add("bg");
+    if(i===0) el.classList.add("active");
+    hero.appendChild(el);
   });
 
   const logo=document.createElement("img");
@@ -204,16 +234,14 @@ function createHero(){
 
   let i=0;
   setInterval(()=>{
-    const imgs=hero.querySelectorAll(".bg-img");
-    if(imgs.length > 0) {
-      imgs[i].classList.remove("active");
-      i=(i+1)%imgs.length;
-      imgs[i].classList.add("active");
-    }
+    const imgs=document.querySelectorAll(".bg");
+    imgs[i].classList.remove("active");
+    i=(i+1)%imgs.length;
+    imgs[i].classList.add("active");
   },4000);
 }
 
-/* GALLERY (Încărcare rapidă) */
+/* GALLERY */
 function createGallery(){
   const gallery=document.getElementById("gallery");
 
@@ -223,8 +251,9 @@ function createGallery(){
 
     const image=document.createElement("img");
     image.src=img.download_url;
-    image.loading="lazy"; // Încărcare leneșă pentru viteză
-    image.decoding="async"; // Optimizare extra pentru viteză
+    image.loading="lazy";
+    image.decoding="async";
+    image.draggable=false;
 
     card.appendChild(image);
     gallery.appendChild(card);
@@ -245,6 +274,16 @@ document.getElementById("lightbox").onclick=e=>{
     e.currentTarget.style.display="none";
   }
 };
+
+/* 🔒 PROTECTIE */
+document.addEventListener("contextmenu",e=>e.preventDefault());
+document.addEventListener("dragstart",e=>e.preventDefault());
+document.addEventListener("selectstart",e=>e.preventDefault());
+document.addEventListener("keydown",e=>{
+  if(e.key==="PrintScreen"){
+    navigator.clipboard.writeText("");
+  }
+});
 
 /* START */
 load();
