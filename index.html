@@ -6,25 +6,32 @@
 
 <title>Titus Emanuel Ilieși — Photojournalist</title>
 
-<meta name="description" content="Portofoliu foto profesional. Fotojurnalism, evenimente și reportaj.">
-<meta name="keywords" content="fotograf, fotojurnalist, portofoliu foto, fotografie profesionala">
+<meta name="description" content="Portofoliu foto premium. Fotojurnalism și fotografie profesională.">
 <meta name="robots" content="index, follow">
-
-<!-- Open Graph (Facebook / Google) -->
-<meta property="og:title" content="Titus Emanuel Ilieși — Photojournalist">
-<meta property="og:description" content="Portofoliu foto profesional">
-<meta property="og:type" content="website">
 
 <style>
 html{scroll-behavior:smooth}
 
-*{box-sizing:border-box;margin:0;padding:0}
+*{margin:0;padding:0;box-sizing:border-box}
 
 body{
   font-family:system-ui;
   background:#0a0a0a;
   color:#fff;
   overflow-x:hidden;
+}
+
+/* LOADER */
+#loader{
+  position:fixed;
+  inset:0;
+  background:#000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+  font-size:20px;
+  letter-spacing:2px;
 }
 
 /* NAV */
@@ -43,33 +50,7 @@ nav{
 .nav-logo{
   height:50px;
   filter:invert(1);
-  transition:transform .3s;
 }
-.nav-logo:hover{transform:scale(1.1)}
-
-.nav-links{
-  display:flex;
-  gap:20px;
-  list-style:none;
-}
-.nav-links a{
-  color:#fff;
-  text-decoration:none;
-  font-size:14px;
-  letter-spacing:1px;
-  position:relative;
-}
-.nav-links a::after{
-  content:"";
-  position:absolute;
-  bottom:-5px;
-  left:0;
-  width:0;
-  height:1px;
-  background:#fff;
-  transition:.3s;
-}
-.nav-links a:hover::after{width:100%}
 
 /* HERO */
 .hero{
@@ -78,14 +59,14 @@ nav{
   overflow:hidden;
 }
 
-.hero img.bg{
+.hero img{
   position:absolute;
   width:100%;
   height:100%;
   object-fit:cover;
   opacity:0;
-  transform:scale(1.1);
-  transition:opacity 2s, transform 6s;
+  transform:scale(1.2);
+  transition:2s;
 }
 
 .hero img.active{
@@ -99,21 +80,25 @@ nav{
   left:50%;
   transform:translate(-50%,-50%);
   width:300px;
-  opacity:0.9;
+  opacity:.9;
   z-index:10;
-  pointer-events:none;
   filter:invert(1);
-  animation:fadeIn 2s ease;
 }
 
-@keyframes fadeIn{
-  from{opacity:0;transform:translate(-50%,-60%)}
-  to{opacity:0.9;transform:translate(-50%,-50%)}
+/* SCROLL EFFECT */
+.reveal{
+  opacity:0;
+  transform:translateY(60px);
+  transition:1s;
+}
+.reveal.active{
+  opacity:1;
+  transform:translateY(0);
 }
 
 /* GALLERY */
 #gallery{
-  padding:100px 20px 20px;
+  padding:100px 20px;
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
   gap:20px;
@@ -128,14 +113,24 @@ nav{
   width:100%;
   height:340px;
   object-fit:cover;
-  cursor:pointer;
-  transition:transform .5s;
-  user-select:none;
-  -webkit-user-drag:none;
+  transition:0.6s;
 }
 
 .card:hover img{
-  transform:scale(1.05);
+  transform:scale(1.1);
+}
+
+/* glow effect */
+.card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(transparent,rgba(0,0,0,.7));
+  opacity:0;
+  transition:.4s;
+}
+.card:hover::before{
+  opacity:1;
 }
 
 /* watermark */
@@ -144,15 +139,14 @@ nav{
   position:absolute;
   inset:0;
   background:url('logo.png') center/40% no-repeat;
-  opacity:0.15;
-  pointer-events:none;
+  opacity:.1;
 }
 
 /* LIGHTBOX */
 #lightbox{
   position:fixed;
   inset:0;
-  background:rgba(0,0,0,.95);
+  background:#000;
   display:none;
   align-items:center;
   justify-content:center;
@@ -167,14 +161,13 @@ nav{
 .lb-watermark{
   position:absolute;
   width:40%;
-  opacity:0.3;
-  pointer-events:none;
+  opacity:.3;
 }
 
 /* FOOTER */
 footer{
   text-align:center;
-  padding:20px;
+  padding:30px;
   color:#777;
 }
 </style>
@@ -182,11 +175,10 @@ footer{
 
 <body>
 
+<div id="loader">LOADING...</div>
+
 <nav>
-  <a href="#hero"><img src="logo.png" class="nav-logo"></a>
-  <ul class="nav-links">
-    <li><a href="#gallery">Galerie</a></li>
-  </ul>
+  <img src="logo.png" class="nav-logo">
 </nav>
 
 <section class="hero" id="hero"></section>
@@ -202,7 +194,6 @@ footer{
 
 <script>
 let images=[];
-let current=0;
 
 /* LOAD */
 async function load(){
@@ -213,6 +204,8 @@ async function load(){
 
   createHero();
   createGallery();
+
+  document.getElementById("loader").style.display="none";
 }
 
 /* HERO */
@@ -222,7 +215,6 @@ function createHero(){
   images.slice(0,5).forEach((img,i)=>{
     const el=document.createElement("img");
     el.src=img.download_url;
-    el.classList.add("bg");
     if(i===0) el.classList.add("active");
     hero.appendChild(el);
   });
@@ -234,7 +226,7 @@ function createHero(){
 
   let i=0;
   setInterval(()=>{
-    const imgs=document.querySelectorAll(".bg");
+    const imgs=hero.querySelectorAll("img:not(.hero-logo)");
     imgs[i].classList.remove("active");
     i=(i+1)%imgs.length;
     imgs[i].classList.add("active");
@@ -247,12 +239,11 @@ function createGallery(){
 
   images.forEach((img,i)=>{
     const card=document.createElement("div");
-    card.className="card";
+    card.className="card reveal";
 
     const image=document.createElement("img");
     image.src=img.download_url;
     image.loading="lazy";
-    image.decoding="async";
     image.draggable=false;
 
     card.appendChild(image);
@@ -264,28 +255,31 @@ function createGallery(){
 
 /* LIGHTBOX */
 function openLightbox(i){
-  current=i;
   document.getElementById("lightbox").style.display="flex";
   document.getElementById("lb-img").src=images[i].download_url;
 }
 
+/* CLOSE */
 document.getElementById("lightbox").onclick=e=>{
   if(e.target.id==="lightbox"){
     e.currentTarget.style.display="none";
   }
 };
 
-/* 🔒 PROTECTIE */
-document.addEventListener("contextmenu",e=>e.preventDefault());
-document.addEventListener("dragstart",e=>e.preventDefault());
-document.addEventListener("selectstart",e=>e.preventDefault());
-document.addEventListener("keydown",e=>{
-  if(e.key==="PrintScreen"){
-    navigator.clipboard.writeText("");
-  }
+/* SCROLL ANIMATION */
+window.addEventListener("scroll",()=>{
+  document.querySelectorAll(".reveal").forEach(el=>{
+    const top=el.getBoundingClientRect().top;
+    if(top<window.innerHeight-100){
+      el.classList.add("active");
+    }
+  });
 });
 
-/* START */
+/* PROTECT */
+document.addEventListener("contextmenu",e=>e.preventDefault());
+document.addEventListener("dragstart",e=>e.preventDefault());
+
 load();
 </script>
 
