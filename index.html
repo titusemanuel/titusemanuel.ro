@@ -3,10 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Portofoliu fotojurnalist Titus Emanuel Ilieși. Galerie web profesională, fotografie de eveniment și reportaj.">
+<meta name="keywords" content="Titus Emanuel, fotojurnalist, portofoliu foto, fotografie, web design">
+<meta name="robots" content="index, follow">
 
 <title>Titus Emanuel Ilieși — Photojournalist</title>
 
 <style>
+/* Smooth scroll pentru meniu */
+html {
+  scroll-behavior: smooth;
+}
+
 *{box-sizing:border-box;margin:0;padding:0}
 
 body{
@@ -20,11 +28,37 @@ nav{
   position:fixed;
   width:100%;
   padding:15px 30px;
-  background:rgba(0,0,0,.6);
+  background:rgba(0,0,0,.8); /* Ușor mai întunecat pentru contrast */
   backdrop-filter:blur(10px);
   display:flex;
   justify-content:space-between;
+  align-items: center;
   z-index:1000;
+}
+
+.nav-logo {
+  height: 40px; /* Dimensiunea logo-ului din meniu */
+  object-fit: contain;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 14px;
+  letter-spacing: 1px;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover {
+  color: #aaa;
 }
 
 /* HERO */
@@ -33,29 +67,31 @@ nav{
   position:relative;
 }
 
-.hero img{
+.hero img.bg-img {
   position:absolute;
   width:100%;
   height:100%;
   object-fit:cover;
   opacity:0;
-  transition:opacity 1.5s;
+  transition:opacity 1.5s ease-in-out;
 }
 
-.hero img.active{opacity:1}
+.hero img.bg-img.active{opacity:1}
 
 .hero-logo{
   position:absolute;
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
-  width:250px;
-  opacity:.1;
+  width:350px; /* Logo puțin mai mare pe prima pagină */
+  opacity:0.8; /* Vizibilitate mai bună a logo-ului pe poze */
+  z-index: 10;
+  pointer-events: none; /* Să nu interfereze cu nimic */
 }
 
 /* GALLERY */
 #gallery{
-  padding:20px;
+  padding:80px 20px 20px; /* Padding top adăugat ca să nu fie acoperit de navigație */
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
   gap:20px;
@@ -66,33 +102,46 @@ nav{
   height:340px;
   object-fit:cover;
   cursor:pointer;
+  transition: transform 0.3s ease;
+}
+
+.card img:hover {
+  transform: scale(1.02); /* Un mic efect vizual la trecerea cu mouse-ul */
 }
 
 /* LIGHTBOX */
 #lightbox{
   position:fixed;
   inset:0;
-  background:#000;
+  background:rgba(0,0,0,0.95);
   display:none;
   align-items:center;
   justify-content:center;
+  z-index: 2000;
 }
 
-#lightbox img{
+#lightbox img.main-img {
   max-width:90%;
   max-height:90%;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
 }
 
 .lb-watermark{
   position:absolute;
-  width:40%;
-  opacity:.1;
+  width:30%;
+  max-width: 400px;
+  opacity:0.5; /* Vizibilitate watermark */
+  pointer-events: none; /* IMPORTANT: ca să poți da click oriunde să închizi poza */
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
 }
 
 footer{
   text-align:center;
   padding:20px;
   color:#777;
+  font-size: 14px;
 }
 </style>
 </head>
@@ -100,7 +149,10 @@ footer{
 <body>
 
 <nav>
-  <div>Titus Emanuel</div>
+  <a href="#hero"><img src="logo.png" alt="Titus Emanuel Logo" class="nav-logo"></a>
+  <ul class="nav-links">
+    <li><a href="#gallery">Galerie Foto</a></li>
+  </ul>
 </nav>
 
 <section class="hero" id="hero"></section>
@@ -108,11 +160,11 @@ footer{
 <section id="gallery"></section>
 
 <div id="lightbox">
-  <img id="lb-img">
-  <img src="logo.png" class="lb-watermark">
+  <img id="lb-img" class="main-img">
+  <img src="logo.png" class="lb-watermark" alt="Watermark">
 </div>
 
-<footer>© 2026</footer>
+<footer>© 2026 Titus Emanuel Ilieși. Toate drepturile rezervate.</footer>
 
 <script>
 let images=[];
@@ -120,22 +172,27 @@ let current=0;
 
 /* LOAD IMAGES */
 async function load(){
-  const res=await fetch("https://api.github.com/repos/titusemanuel/titusemanuel.ro/contents/images");
-  const data=await res.json();
+  try {
+    const res=await fetch("https://api.github.com/repos/titusemanuel/titusemanuel.ro/contents/images");
+    const data=await res.json();
 
-  images=data.filter(f=>/\.(jpg|jpeg|png)$/i.test(f.name));
+    images=data.filter(f=>/\.(jpg|jpeg|png)$/i.test(f.name));
 
-  createHero();
-  createGallery();
+    createHero();
+    createGallery();
+  } catch (error) {
+    console.error("Eroare la încărcarea imaginilor:", error);
+  }
 }
 
-/* HERO */
+/* HERO (Schimbă pozele singure) */
 function createHero(){
   const hero=document.getElementById("hero");
 
   images.slice(0,5).forEach((img,i)=>{
     const image=document.createElement("img");
     image.src=img.download_url;
+    image.classList.add("bg-img");
     if(i===0) image.classList.add("active");
     hero.appendChild(image);
   });
@@ -147,14 +204,16 @@ function createHero(){
 
   let i=0;
   setInterval(()=>{
-    const imgs=hero.querySelectorAll("img:not(.hero-logo)");
-    imgs[i].classList.remove("active");
-    i=(i+1)%imgs.length;
-    imgs[i].classList.add("active");
+    const imgs=hero.querySelectorAll(".bg-img");
+    if(imgs.length > 0) {
+      imgs[i].classList.remove("active");
+      i=(i+1)%imgs.length;
+      imgs[i].classList.add("active");
+    }
   },4000);
 }
 
-/* GALLERY */
+/* GALLERY (Încărcare rapidă) */
 function createGallery(){
   const gallery=document.getElementById("gallery");
 
@@ -164,7 +223,8 @@ function createGallery(){
 
     const image=document.createElement("img");
     image.src=img.download_url;
-    image.loading="lazy";
+    image.loading="lazy"; // Încărcare leneșă pentru viteză
+    image.decoding="async"; // Optimizare extra pentru viteză
 
     card.appendChild(image);
     gallery.appendChild(card);
