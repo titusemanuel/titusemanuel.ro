@@ -1,1 +1,158 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Titus Emanuel — Luxury Portfolio</title>
+
+<style>
+body{margin:0;background:#050505;color:#fff;font-family:Arial,Helvetica,sans-serif;overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;width:100%;padding:20px;background:rgba(0,0,0,.6);backdrop-filter:blur(12px);z-index:1000}
+nav img{height:40px;filter:invert(1)}
+
+/* HERO PARALLAX */
+.hero{height:100vh;position:relative;overflow:hidden}
+.hero img{position:absolute;width:100%;height:100%;object-fit:cover;transform:scale(1.2);opacity:0;transition:2s}
+.hero img.active{opacity:1;transform:scale(1)}
+.hero-title{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:50px;letter-spacing:6px}
+
+/* ALBUM GRID */
+#albums{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;padding:120px 40px}
+.album{position:relative;height:420px;overflow:hidden;cursor:pointer}
+.album img{width:100%;height:100%;object-fit:cover;transition:1.2s}
+.album:hover img{transform:scale(1.15)}
+.album::after{content:attr(data-title);position:absolute;bottom:0;width:100%;padding:25px;background:linear-gradient(transparent,black);font-size:24px;letter-spacing:2px}
+
+/* GALLERY */
+#gallery{display:none;padding:120px 30px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
+.card{overflow:hidden}
+.card img{width:100%;height:320px;object-fit:cover;transition:.6s}
+.card:hover img{transform:scale(1.1)}
+
+/* LIGHTBOX */
+#lightbox{position:fixed;inset:0;background:rgba(0,0,0,.95);display:none;align-items:center;justify-content:center;z-index:2000}
+#lightbox img{max-width:90%;max-height:90%}
+
+/* BACK */
+#back{position:fixed;top:80px;left:20px;display:none;background:#fff;color:#000;padding:10px 15px;cursor:pointer;z-index:2000}
+
+/* FADE IN */
+.fade{opacity:0;transform:translateY(40px);transition:1s}
+.fade.show{opacity:1;transform:translateY(0)}
+</style>
+</head>
+
+<body>
+
+<nav><img src="logo.png"></nav>
+
+<section class="hero" id="hero">
+  <div class="hero-title">TITUS EMANUEL</div>
+</section>
+
+<div id="albums"></div>
+<div id="back">← Back</div>
+<div id="gallery"></div>
+
+<div id="lightbox"><img id="lb"></div>
+
+<script>
+const albums=[
+  {name:"Weddings",folder:"images/album1"},
+  {name:"Street",folder:"images/album2"},
+  {name:"Portraits",folder:"images/album3"}
+];
+
+/* HERO SLIDER */
+const hero=document.getElementById("hero");
+["images/album1/img1.jpg","images/album2/img1.jpg","images/album3/img1.jpg"].forEach((src,i)=>{
+  const img=document.createElement("img");
+  img.src=src;
+  if(i===0) img.classList.add("active");
+  hero.appendChild(img);
+});
+
+let hi=0;
+setInterval(()=>{
+  const imgs=hero.querySelectorAll("img");
+  imgs[hi].classList.remove("active");
+  hi=(hi+1)%imgs.length;
+  imgs[hi].classList.add("active");
+},5000);
+
+/* CREATE ALBUMS */
+const albumsContainer=document.getElementById("albums");
+albums.forEach(a=>{
+  const div=document.createElement("div");
+  div.className="album fade";
+  div.dataset.title=a.name;
+
+  const img=document.createElement("img");
+  img.src=`${a.folder}/img1.jpg`;
+
+  div.appendChild(img);
+  albumsContainer.appendChild(div);
+
+  div.onclick=()=>openAlbum(a);
+});
+
+/* OPEN ALBUM */
+function openAlbum(a){
+  albumsContainer.style.display="none";
+  gallery.style.display="grid";
+  back.style.display="block";
+
+  gallery.innerHTML="";
+
+  for(let i=1;i<=30;i++){
+    const card=document.createElement("div");
+    card.className="card fade";
+
+    const img=document.createElement("img");
+    img.src=`${a.folder}/img${i}.jpg`;
+
+    img.onclick=()=>openLightbox(img.src);
+
+    card.appendChild(img);
+    gallery.appendChild(card);
+  }
+}
+
+/* LIGHTBOX */
+function openLightbox(src){
+  lb.src=src;
+  lightbox.style.display="flex";
+}
+lightbox.onclick=()=>lightbox.style.display="none";
+
+/* BACK */
+back.onclick=()=>{
+  albumsContainer.style.display="grid";
+  gallery.style.display="none";
+  back.style.display="none";
+};
+
+/* SCROLL FADE */
+window.addEventListener("scroll",()=>{
+  document.querySelectorAll(".fade").forEach(el=>{
+    if(el.getBoundingClientRect().top<window.innerHeight-100){
+      el.classList.add("show");
+    }
+  });
+});
+
+/* PRELOAD */
+window.onload=()=>{
+  document.querySelectorAll("img").forEach(img=>{
+    const i=new Image();
+    i.src=img.src;
+  });
+};
+
+</script>
+
+</body>
+</html>
 
