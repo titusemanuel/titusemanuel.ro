@@ -4,283 +4,175 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Titus Emanuel Ilieși — Photojournalist</title>
-
-<meta name="description" content="Portofoliu foto premium. Fotojurnalism și fotografie profesională.">
-<meta name="robots" content="index, follow">
+<title>Titus Emanuel — Portfolio</title>
 
 <style>
-html{scroll-behavior:smooth}
-
-*{margin:0;padding:0;box-sizing:border-box}
-
 body{
-  font-family:system-ui;
+  margin:0;
   background:#0a0a0a;
   color:#fff;
-  overflow-x:hidden;
-}
-
-/* LOADER */
-#loader{
-  position:fixed;
-  inset:0;
-  background:#000;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:9999;
-  font-size:20px;
-  letter-spacing:2px;
+  font-family:system-ui;
 }
 
 /* NAV */
 nav{
   position:fixed;
   width:100%;
-  padding:15px 30px;
-  background:rgba(0,0,0,.85);
+  padding:20px;
+  background:rgba(0,0,0,.7);
   backdrop-filter:blur(10px);
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
   z-index:1000;
 }
 
-.nav-logo{
-  height:50px;
-  filter:invert(1);
-}
+nav img{height:40px;filter:invert(1)}
 
 /* HERO */
 .hero{
   height:100vh;
-  position:relative;
-  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:40px;
+  letter-spacing:5px;
 }
 
-.hero img{
-  position:absolute;
+/* ALBUM GRID */
+#albums{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:20px;
+  padding:100px 30px;
+}
+
+.album{
+  position:relative;
+  height:400px;
+  overflow:hidden;
+  cursor:pointer;
+}
+
+.album img{
   width:100%;
   height:100%;
   object-fit:cover;
-  opacity:0;
-  transform:scale(1.2);
-  transition:2s;
-}
-
-.hero img.active{
-  opacity:1;
-  transform:scale(1);
-}
-
-.hero-logo{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  width:300px;
-  opacity:.9;
-  z-index:10;
-  filter:invert(1);
-}
-
-/* SCROLL EFFECT */
-.reveal{
-  opacity:0;
-  transform:translateY(60px);
   transition:1s;
 }
-.reveal.active{
-  opacity:1;
-  transform:translateY(0);
+
+/* hover zoom */
+.album:hover img{
+  transform:scale(1.1);
 }
 
-/* GALLERY */
+/* overlay */
+.album::after{
+  content:attr(data-title);
+  position:absolute;
+  bottom:0;
+  left:0;
+  width:100%;
+  padding:20px;
+  background:linear-gradient(transparent,black);
+  font-size:22px;
+  letter-spacing:2px;
+}
+
+/* SINGLE GALLERY */
 #gallery{
+  display:none;
   padding:100px 20px;
-  display:grid;
   grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
   gap:20px;
 }
 
-.card{
-  position:relative;
-  overflow:hidden;
-}
-
 .card img{
   width:100%;
-  height:340px;
+  height:300px;
   object-fit:cover;
-  transition:0.6s;
 }
 
-.card:hover img{
-  transform:scale(1.1);
-}
-
-/* glow effect */
-.card::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(transparent,rgba(0,0,0,.7));
-  opacity:0;
-  transition:.4s;
-}
-.card:hover::before{
-  opacity:1;
-}
-
-/* watermark */
-.card::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:url('logo.png') center/40% no-repeat;
-  opacity:.1;
-}
-
-/* LIGHTBOX */
-#lightbox{
+/* BACK BUTTON */
+#back{
   position:fixed;
-  inset:0;
-  background:#000;
+  top:80px;
+  left:20px;
   display:none;
-  align-items:center;
-  justify-content:center;
   z-index:2000;
-}
-
-#lightbox img{
-  max-width:90%;
-  max-height:90%;
-}
-
-.lb-watermark{
-  position:absolute;
-  width:40%;
-  opacity:.3;
-}
-
-/* FOOTER */
-footer{
-  text-align:center;
-  padding:30px;
-  color:#777;
+  background:#fff;
+  color:#000;
+  padding:10px 15px;
+  cursor:pointer;
 }
 </style>
 </head>
 
 <body>
 
-<div id="loader">LOADING...</div>
-
 <nav>
-  <img src="logo.png" class="nav-logo">
+  <img src="logo.png">
 </nav>
 
-<section class="hero" id="hero"></section>
+<div class="hero">PORTFOLIO</div>
 
-<section id="gallery"></section>
+<div id="albums"></div>
 
-<div id="lightbox">
-  <img id="lb-img">
-  <img src="logo.png" class="lb-watermark">
-</div>
+<div id="back">← Back</div>
 
-<footer>© 2026 Titus Emanuel</footer>
+<div id="gallery"></div>
 
 <script>
-let images=[];
 
-/* LOAD */
-async function load(){
-  const res=await fetch("https://api.github.com/repos/titusemanuel/titusemanuel.ro/contents/images");
-  const data=await res.json();
+const albums=[
+  {name:"Weddings", folder:"images/album1"},
+  {name:"Street", folder:"images/album2"},
+  {name:"Portraits", folder:"images/album3"}
+];
 
-  images=data.filter(f=>/\.(jpg|jpeg|png)$/i.test(f.name));
+/* CREATE ALBUMS */
+const albumsContainer=document.getElementById("albums");
 
-  createHero();
-  createGallery();
+albums.forEach(album=>{
+  const div=document.createElement("div");
+  div.className="album";
+  div.dataset.title=album.name;
 
-  document.getElementById("loader").style.display="none";
-}
+  // prima imagine ca cover
+  const img=document.createElement("img");
+  img.src=`${album.folder}/img1.jpg`;
 
-/* HERO */
-function createHero(){
-  const hero=document.getElementById("hero");
+  div.appendChild(img);
+  albumsContainer.appendChild(div);
 
-  images.slice(0,5).forEach((img,i)=>{
-    const el=document.createElement("img");
-    el.src=img.download_url;
-    if(i===0) el.classList.add("active");
-    hero.appendChild(el);
-  });
-
-  const logo=document.createElement("img");
-  logo.src="logo.png";
-  logo.className="hero-logo";
-  hero.appendChild(logo);
-
-  let i=0;
-  setInterval(()=>{
-    const imgs=hero.querySelectorAll("img:not(.hero-logo)");
-    imgs[i].classList.remove("active");
-    i=(i+1)%imgs.length;
-    imgs[i].classList.add("active");
-  },4000);
-}
-
-/* GALLERY */
-function createGallery(){
-  const gallery=document.getElementById("gallery");
-
-  images.forEach((img,i)=>{
-    const card=document.createElement("div");
-    card.className="card reveal";
-
-    const image=document.createElement("img");
-    image.src=img.download_url;
-    image.loading="lazy";
-    image.draggable=false;
-
-    card.appendChild(image);
-    gallery.appendChild(card);
-
-    card.onclick=()=>openLightbox(i);
-  });
-}
-
-/* LIGHTBOX */
-function openLightbox(i){
-  document.getElementById("lightbox").style.display="flex";
-  document.getElementById("lb-img").src=images[i].download_url;
-}
-
-/* CLOSE */
-document.getElementById("lightbox").onclick=e=>{
-  if(e.target.id==="lightbox"){
-    e.currentTarget.style.display="none";
-  }
-};
-
-/* SCROLL ANIMATION */
-window.addEventListener("scroll",()=>{
-  document.querySelectorAll(".reveal").forEach(el=>{
-    const top=el.getBoundingClientRect().top;
-    if(top<window.innerHeight-100){
-      el.classList.add("active");
-    }
-  });
+  div.onclick=()=>openAlbum(album);
 });
 
-/* PROTECT */
-document.addEventListener("contextmenu",e=>e.preventDefault());
-document.addEventListener("dragstart",e=>e.preventDefault());
+/* OPEN ALBUM */
+function openAlbum(album){
+  document.getElementById("albums").style.display="none";
+  document.getElementById("gallery").style.display="grid";
+  document.getElementById("back").style.display="block";
 
-load();
+  const gallery=document.getElementById("gallery");
+  gallery.innerHTML="";
+
+  for(let i=1;i<=20;i++){
+    const card=document.createElement("div");
+    card.className="card";
+
+    const img=document.createElement("img");
+    img.src=`${album.folder}/img${i}.jpg`;
+
+    card.appendChild(img);
+    gallery.appendChild(card);
+  }
+}
+
+/* BACK */
+document.getElementById("back").onclick=()=>{
+  document.getElementById("albums").style.display="grid";
+  document.getElementById("gallery").style.display="none";
+  document.getElementById("back").style.display="none";
+};
+
 </script>
 
 </body>
