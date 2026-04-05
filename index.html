@@ -1,14 +1,20 @@
 <script>
-let images = [
-  "images/1.jpg",
-  "images/2.jpg",
-  "images/3.jpg",
-  "images/4.jpg",
-  "images/5.jpg",
-  "images/6.jpg",
-  "images/7.jpg",
-  "images/8.jpg"
-];
+let images=[];
+
+/* LOAD AUTOMAT DIN GITHUB */
+async function loadImages(){
+  const url="https://api.github.com/repos/titusemanuel/titusemanuel.ro/contents/images";
+
+  const res=await fetch(url);
+  const data=await res.json();
+
+  images = data
+    .filter(file => file.type==="file" && /\.(jpg|jpeg|png)$/i.test(file.name))
+    .map(file => file.download_url);
+
+  createHero();
+  createGallery();
+}
 
 /* HERO */
 function createHero(){
@@ -29,6 +35,8 @@ function createHero(){
   let i=0;
   setInterval(()=>{
     const imgs=hero.querySelectorAll("img:not(.hero-logo)");
+    if(imgs.length===0) return;
+
     imgs[i].classList.remove("active");
     i=(i+1)%imgs.length;
     imgs[i].classList.add("active");
@@ -46,6 +54,7 @@ function createGallery(){
     const image=document.createElement("img");
     image.src=src;
     image.loading="lazy";
+    image.decoding="async";
     image.draggable=false;
 
     card.appendChild(image);
@@ -83,6 +92,5 @@ document.addEventListener("contextmenu",e=>e.preventDefault());
 document.addEventListener("dragstart",e=>e.preventDefault());
 
 /* START */
-createHero();
-createGallery();
+loadImages();
 </script>
