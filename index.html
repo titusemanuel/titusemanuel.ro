@@ -1,1 +1,234 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
+<title>Titus Emanuel Ilieși | Photojournalist Portfolio  </title>
+
+<meta name="description" content="Portofoliu foto . Fotojurnalism modern, storytelling vizual cinematic.">
+<meta name="robots" content="index, follow">
+
+<!-- SEO KEYWORDS AUTO -->
+<meta id="keywords" name="keywords" content="foto, portofoliu">
+
+<!-- PERFORMANCE -->
+<link rel="preconnect" href="https://api.github.com">
+
+<style>
+:root{
+  --bg:#050505;
+  --glass:rgba(255,255,255,.05);
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  font-family:system-ui,-apple-system,Segoe UI;
+  background:var(--bg);
+  color:#fff;
+  overflow-x:hidden;
+}
+
+/* NAV MODERN */
+nav{
+  position:fixed;
+  width:100%;
+  padding:20px 40px;
+  backdrop-filter:blur(20px);
+  background:rgba(0,0,0,.4);
+  z-index:1000;
+}
+
+.logo{
+  height:50px;
+  filter:invert(1);
+}
+
+/* HERO */
+.hero{
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  background:linear-gradient(#00000080,#00000080),
+  url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80') center/cover;
+}
+
+.hero h1{
+  font-size:clamp(40px,6vw,90px);
+  letter-spacing:2px;
+}
+
+/* GRID 2026 */
+.gallery{
+  padding:120px 40px;
+  column-count:4;
+  column-gap:20px;
+}
+
+@media(max-width:1200px){.gallery{column-count:3}}
+@media(max-width:800px){.gallery{column-count:2}}
+@media(max-width:500px){.gallery{column-count:1}}
+
+.item{
+  margin-bottom:20px;
+  break-inside:avoid;
+  position:relative;
+  overflow:hidden;
+  border-radius:16px;
+  background:var(--glass);
+  backdrop-filter:blur(10px);
+}
+
+/* IMG */
+.item img{
+  width:100%;
+  display:block;
+  transition:.6s;
+}
+
+.item:hover img{
+  transform:scale(1.08);
+  filter:brightness(1.1);
+}
+
+/* WATERMARK */
+.item::after{
+  content:"© Titus Emanuel";
+  position:absolute;
+  bottom:10px;
+  right:15px;
+  font-size:12px;
+  opacity:.5;
+}
+
+/* SCROLL ANIMATION */
+.reveal{
+  opacity:0;
+  transform:translateY(50px);
+  transition:1s;
+}
+.reveal.active{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* FOOTER */
+footer{
+  text-align:center;
+  padding:40px;
+  color:#777;
+}
+
+/* RIGHT CLICK MESSAGE */
+#copyright{
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#000;
+  padding:10px 20px;
+  border-radius:10px;
+  display:none;
+  z-index:9999;
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+  <img src="logo.png" class="logo">
+</nav>
+
+<section class="hero">
+  <h1>TITUS EMANUEL</h1>
+</section>
+
+<section class="gallery" id="gallery"></section>
+
+<div id="copyright">© Drept de autor protejat</div>
+
+<footer>© 2026 Titus Emanuel | Photojournalist</footer>
+
+<script>
+let images=[];
+
+/* LOAD IMAGES DIN GITHUB */
+async function loadImages(){
+  const url="https://api.github.com/repos/titusemanuel/titusemanuel.ro/contents/images";
+  const res=await fetch(url);
+  const data=await res.json();
+
+  images = data
+    .filter(f => /\.(jpg|jpeg|png)$/i.test(f.name))
+    .map(f => f.download_url);
+
+  render();
+}
+
+/* LOAD KEYWORDS */
+async function loadKeywords(){
+  try{
+    const res = await fetch("https://raw.githubusercontent.com/titusemanuel/titusemanuel.ro/main/keywords.txt");
+    const text = await res.text();
+    document.getElementById("keywords").content = text.replace(/\n/g,",");
+  }catch(e){}
+}
+
+/* RENDER */
+function render(){
+  const gallery=document.getElementById("gallery");
+
+  images.forEach(src=>{
+    const div=document.createElement("div");
+    div.className="item reveal";
+
+    const img=document.createElement("img");
+    img.src=src;
+    img.loading="lazy";
+    img.decoding="async";
+    img.draggable=false;
+
+    div.appendChild(img);
+    gallery.appendChild(div);
+  });
+}
+
+/* SCROLL ANIMATION */
+window.addEventListener("scroll",()=>{
+  document.querySelectorAll(".reveal").forEach(el=>{
+    if(el.getBoundingClientRect().top < window.innerHeight-100){
+      el.classList.add("active");
+    }
+  });
+});
+
+/* PROTECT CLICK */
+document.addEventListener("contextmenu",e=>{
+  e.preventDefault();
+  const box=document.getElementById("copyright");
+  box.style.display="block";
+
+  setTimeout(()=>{
+    box.style.display="none";
+  },2000);
+});
+
+/* DISABLE DRAG */
+document.addEventListener("dragstart",e=>e.preventDefault());
+
+/* AUTO REFRESH (verifică poze noi) */
+setInterval(()=>{
+  location.reload();
+},300000); // 5 min
+
+/* START */
+loadImages();
+loadKeywords();
+</script>
+
+</body>
+</html>
