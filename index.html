@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html lang="ro">
 <head>
 <meta charset="utf-8">
@@ -8,7 +9,7 @@
 
 <meta name="description" content="Portofoliu foto premium 2026. Fotojurnalism cinematic.">
 <meta name="robots" content="index, follow">
-<meta id="keywords" name="keywords" content="foto, portofoliu">
+<meta name="keywords" content="foto, portofoliu">
 
 <link rel="preconnect" href="https://api.github.com">
 
@@ -31,7 +32,6 @@ nav{
   background:rgba(0,0,0,.4);
   z-index:1000;
 }
-.logo{height:50px;filter:invert(1);}
 
 /* HERO */
 .hero{
@@ -91,6 +91,7 @@ nav{
   border-radius:16px;
   overflow:hidden;
   cursor:pointer;
+  background:#0a0a0a;
 }
 
 .item img{
@@ -98,6 +99,15 @@ nav{
   transition:.5s;
 }
 .item:hover img{transform:scale(1.08);}
+
+/* CAPTION */
+.caption{
+  padding:10px;
+  font-size:14px;
+  color:#aaa;
+  text-align:center;
+  letter-spacing:0.5px;
+}
 
 /* LIGHTBOX */
 #lightbox{
@@ -128,7 +138,6 @@ nav{
 .lb-left{left:20px;}
 .lb-right{right:20px;}
 
-/* NUMELE POZEI LIGHTBOX */
 #lb-watermark{
   position:absolute;
   bottom:20px;
@@ -137,7 +146,6 @@ nav{
   font-size:16px;
   opacity:0.7;
   z-index:2010;
-  font-family:system-ui;
 }
 
 /* FOOTER */
@@ -159,13 +167,12 @@ footer{
   display:none;
 }
 </style>
+
 </head>
 
 <body>
 
-<nav>
-  <img src="logo.png" class="logo">
-</nav>
+<nav></nav>
 
 <section class="hero" id="hero">
   <h1>TITUS EMANUEL</h1>
@@ -175,7 +182,6 @@ footer{
 
 <section class="gallery" id="gallery"></section>
 
-<!-- LIGHTBOX -->
 <div id="lightbox">
   <div class="lb-arrow lb-left" onclick="prevImg()">‹</div>
   <img id="lb-img">
@@ -189,11 +195,10 @@ footer{
 
 <script>
 let images=[];
-let imageNames=[]; // Numele pozelor
+let imageNames=[];
 let heroIndex=0;
 let currentIndex=0;
 
-/* LOAD IMAGES */
 async function loadImages(){
   const url="https://api.github.com/repos/titusemanuel/titusemanuel.ro/contents/images";
   const res=await fetch(url);
@@ -203,7 +208,6 @@ async function loadImages(){
     .filter(f => /\.(jpg|jpeg|png)$/i.test(f.name))
     .map(f => f.download_url);
 
-  // Extrage numele fișierelor fără extensie
   imageNames = data
     .filter(f => /\.(jpg|jpeg|png)$/i.test(f.name))
     .map(f => f.name.replace(/\.[^/.]+$/,""));
@@ -212,7 +216,6 @@ async function loadImages(){
   createGallery();
 }
 
-/* HERO */
 function createHero(){
   const hero=document.getElementById("hero");
 
@@ -240,10 +243,8 @@ function prevHero(){
   showHero(heroIndex);
 }
 
-/* AUTO HERO */
 setInterval(nextHero,4000);
 
-/* GALLERY */
 function createGallery(){
   const gallery=document.getElementById("gallery");
 
@@ -255,47 +256,48 @@ function createGallery(){
     img.src=src;
     img.loading="lazy";
 
+    const caption=document.createElement("div");
+    caption.className="caption";
+    caption.textContent=imageNames[i];
+
     div.appendChild(img);
+    div.appendChild(caption);
     gallery.appendChild(div);
 
     div.onclick=()=>openLightbox(i);
   });
 }
 
-/* LIGHTBOX */
 function openLightbox(i){
   currentIndex=i;
   document.getElementById("lightbox").style.display="flex";
   document.getElementById("lb-img").src=images[i];
-  document.getElementById("lb-watermark").textContent = imageNames[i]; // afișează numele fișierului
+  document.getElementById("lb-watermark").textContent=imageNames[i];
 }
 
 function nextImg(){
   currentIndex=(currentIndex+1)%images.length;
   document.getElementById("lb-img").src=images[currentIndex];
-  document.getElementById("lb-watermark").textContent = imageNames[currentIndex];
+  document.getElementById("lb-watermark").textContent=imageNames[currentIndex];
 }
 
 function prevImg(){
   currentIndex=(currentIndex-1+images.length)%images.length;
   document.getElementById("lb-img").src=images[currentIndex];
-  document.getElementById("lb-watermark").textContent = imageNames[currentIndex];
+  document.getElementById("lb-watermark").textContent=imageNames[currentIndex];
 }
 
-/* CLOSE LIGHTBOX */
 document.getElementById("lightbox").onclick=e=>{
   if(e.target.id==="lightbox"){
     e.currentTarget.style.display="none";
   }
 };
 
-/* KEYBOARD */
 document.addEventListener("keydown",e=>{
   if(e.key==="ArrowRight") nextImg();
   if(e.key==="ArrowLeft") prevImg();
 });
 
-/* PROTECT */
 document.addEventListener("contextmenu",e=>{
   e.preventDefault();
   const box=document.getElementById("copyright");
@@ -305,7 +307,6 @@ document.addEventListener("contextmenu",e=>{
 
 document.addEventListener("dragstart",e=>e.preventDefault());
 
-/* START */
 loadImages();
 </script>
 
