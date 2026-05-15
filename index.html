@@ -1,1 +1,283 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Titus Emanuel Ilieși | Portofoliu Foto 2026</title>
+<meta name="description" content="Portofoliu foto premium 2026. Fotojurnalism cinematic.">
+<meta name="robots" content="index, follow">
+<meta name="keywords" content="foto, portofoliu, fotografie, fotojurnalism">
 
+<style>
+:root {
+    --bg: #0a0a0a;
+    --primary: #ffffff;
+    --accent: #f5a623;
+}
+
+/* Reset */
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg);
+    color: var(--primary);
+    scroll-behavior: smooth;
+}
+
+/* NAV */
+nav {
+    position: fixed;
+    top:0; left:0; width:100%;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(10px);
+    padding: 15px 40px;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+}
+nav h2 {
+    font-size: 22px;
+    color: var(--accent);
+}
+nav a {
+    color: var(--primary);
+    text-decoration: none;
+    margin-left: 25px;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+nav a:hover { color: var(--accent); }
+
+/* HERO */
+.hero {
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    overflow:hidden;
+}
+.hero img {
+    position:absolute;
+    width:100%; height:100%;
+    object-fit:cover;
+    opacity:0;
+    transition:1s;
+}
+.hero img.active { opacity:1; }
+.hero .overlay {
+    position:absolute; inset:0;
+    background: rgba(0,0,0,0.4);
+}
+.hero h1 {
+    position: relative;
+    font-size:clamp(50px, 8vw, 100px);
+    text-align:center;
+    letter-spacing: 2px;
+    z-index:10;
+}
+
+/* ARROWS HERO */
+.arrow {
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:50px;
+    cursor:pointer;
+    z-index:20;
+    padding:15px;
+    background: rgba(0,0,0,0.5);
+    border-radius:50%;
+    transition: transform 0.2s;
+}
+.arrow:hover { transform: translateY(-50%) scale(1.1); }
+.left { left:30px; }
+.right { right:30px; }
+
+/* GALLERY */
+.gallery {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 120px 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+    gap:20px;
+}
+.item {
+    position: relative;
+    overflow: hidden;
+    border-radius:15px;
+    cursor:pointer;
+    background:#111;
+    transition: transform 0.3s;
+}
+.item img { width:100%; display:block; transition: transform 0.5s; }
+.item:hover img { transform: scale(1.1); }
+.caption {
+    position: absolute;
+    bottom:0;
+    width:100%;
+    padding:10px;
+    background: rgba(0,0,0,0.5);
+    color:#fff;
+    text-align:center;
+    font-size:14px;
+    backdrop-filter: blur(5px);
+}
+
+/* LIGHTBOX */
+#lightbox {
+    position: fixed;
+    inset:0;
+    background: rgba(0,0,0,0.95);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+#lb-img { max-width:90%; max-height:90%; border-radius:10px; }
+.lb-arrow {
+    position: absolute;
+    top:50%;
+    transform:translateY(-50%);
+    font-size:60px;
+    cursor:pointer;
+    padding:20px;
+    color:#fff;
+    user-select:none;
+}
+.lb-left { left:30px; }
+.lb-right { right:30px; }
+#lb-watermark {
+    position:absolute;
+    bottom:20px; right:20px;
+    font-size:16px;
+    color:var(--accent);
+    opacity:0.8;
+}
+
+/* FOOTER */
+footer {
+    text-align:center;
+    padding:40px;
+    color:#777;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+/* COPYRIGHT ALERT */
+#copyright {
+    position: fixed;
+    bottom:20px; left:50%;
+    transform:translateX(-50%);
+    background:#111; color:#fff;
+    padding:10px 20px; border-radius:10px;
+    display:none;
+}
+</style>
+</head>
+
+<body>
+<nav>
+    <h2>Titus Emanuel</h2>
+    <div>
+        <a href="#hero">Acasă</a>
+        <a href="#gallery">Galerie</a>
+        <a href="#footer">Contact</a>
+    </div>
+</nav>
+
+<section class="hero" id="hero">
+    <div class="overlay"></div>
+    <h1>TITUS EMANUEL</h1>
+    <div class="arrow left" onclick="prevHero()">‹</div>
+    <div class="arrow right" onclick="nextHero()">›</div>
+</section>
+
+<section class="gallery" id="gallery"></section>
+
+<div id="lightbox">
+    <div class="lb-arrow lb-left" onclick="prevImg()">‹</div>
+    <img id="lb-img">
+    <div class="lb-arrow lb-right" onclick="nextImg()">›</div>
+    <div id="lb-watermark"></div>
+</div>
+
+<div id="copyright">© Drept de autor protejat</div>
+<footer id="footer">© 2026 Titus Emanuel</footer>
+
+<script>
+let images=[], imageNames=[], heroIndex=0, currentIndex=0;
+
+async function loadImages(){
+    const url="https://api.github.com/repos/titusemanuel/titusemanuel.ro/contents/images";
+    const res=await fetch(url);
+    const data=await res.json();
+    images = data.filter(f => /\.(jpg|jpeg|png)$/i.test(f.name)).map(f => f.download_url);
+    imageNames = data.filter(f => /\.(jpg|jpeg|png)$/i.test(f.name)).map(f => f.name.replace(/\.[^/.]+$/,""));
+    createHero(); createGallery();
+}
+
+function createHero(){
+    const hero=document.getElementById("hero");
+    images.slice(0,6).forEach((src,i)=>{
+        const img=document.createElement("img");
+        img.src=src;
+        if(i===0) img.classList.add("active");
+        hero.appendChild(img);
+    });
+}
+
+function showHero(i){
+    document.querySelectorAll(".hero img").forEach(el=>el.classList.remove("active"));
+    document.querySelectorAll(".hero img")[i].classList.add("active");
+}
+function nextHero(){ heroIndex=(heroIndex+1)%6; showHero(heroIndex); }
+function prevHero(){ heroIndex=(heroIndex-1+6)%6; showHero(heroIndex); }
+setInterval(nextHero,4000);
+
+function createGallery(){
+    const gallery=document.getElementById("gallery");
+    images.forEach((src,i)=>{
+        const div=document.createElement("div"); div.className="item";
+        const img=document.createElement("img"); img.src=src; img.loading="lazy";
+        const caption=document.createElement("div"); caption.className="caption"; caption.textContent=imageNames[i];
+        div.appendChild(img); div.appendChild(caption);
+        div.onclick=()=>openLightbox(i);
+        gallery.appendChild(div);
+    });
+}
+
+function openLightbox(i){
+    currentIndex=i;
+    document.getElementById("lightbox").style.display="flex";
+    document.getElementById("lb-img").src=images[i];
+    document.getElementById("lb-watermark").textContent=imageNames[i];
+}
+
+function nextImg(){ currentIndex=(currentIndex+1)%images.length; updateLightbox(); }
+function prevImg(){ currentIndex=(currentIndex-1+images.length)%images.length; updateLightbox(); }
+function updateLightbox(){
+    document.getElementById("lb-img").src=images[currentIndex];
+    document.getElementById("lb-watermark").textContent=imageNames[currentIndex];
+}
+
+document.getElementById("lightbox").onclick=e=>{
+    if(e.target.id==="lightbox") e.currentTarget.style.display="none";
+};
+document.addEventListener("keydown",e=>{
+    if(e.key==="ArrowRight") nextImg();
+    if(e.key==="ArrowLeft") prevImg();
+});
+document.addEventListener("contextmenu",e=>{
+    e.preventDefault();
+    const box=document.getElementById("copyright");
+    box.style.display="block";
+    setTimeout(()=>box.style.display="none",2000);
+});
+document.addEventListener("dragstart",e=>e.preventDefault());
+
+loadImages();
+</script>
+</body>
+</html>
