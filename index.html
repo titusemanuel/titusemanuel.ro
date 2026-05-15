@@ -1,178 +1,38 @@
 <!doctype html>
-
 <html lang="ro">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>Titus Emanuel Ilieși | Photojournalist Portfolio 2026</title>
-
-<meta name="description" content="Portofoliu foto premium 2026. Fotojurnalism cinematic.">
-<meta name="robots" content="index, follow">
-<meta name="keywords" content="foto, portofoliu">
-
-<link rel="preconnect" href="https://api.github.com">
-
+<title>Titus Emanuel Ilieși | Portofoliu Foto 2026</title>
 <style>
-:root{--bg:#050505;}
-*{margin:0;padding:0;box-sizing:border-box}
-
-body{
-  font-family:system-ui;
-  background:var(--bg);
-  color:#fff;
-}
-
-/* NAV */
-nav{
-  position:fixed;
-  width:100%;
-  padding:20px 40px;
-  backdrop-filter:blur(20px);
-  background:rgba(0,0,0,.4);
-  z-index:1000;
-}
-
-/* HERO */
-.hero{
-  height:100vh;
-  position:relative;
-  overflow:hidden;
-}
-
-.hero img{
-  position:absolute;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  opacity:0;
-  transition:1s;
-}
-
+body{margin:0;font-family:system-ui;background:#050505;color:#fff;}
+nav{position:fixed;top:0;width:100%;padding:20px;background:rgba(0,0,0,.4);backdrop-filter:blur(20px);z-index:1000;text-align:center;font-size:20px;}
+.hero{height:100vh;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+.hero img{position:absolute;width:100%;height:100%;object-fit:cover;opacity:0;transition:1s;}
 .hero img.active{opacity:1;}
-
-.hero h1{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  font-size:clamp(40px,6vw,90px);
-  z-index:10;
-}
-
-/* ARROWS HERO */
-.arrow{
-  position:absolute;
-  top:50%;
-  transform:translateY(-50%);
-  font-size:40px;
-  cursor:pointer;
-  z-index:20;
-  padding:10px;
-  background:rgba(0,0,0,.4);
-  border-radius:50%;
-}
-.left{left:20px;}
-.right{right:20px;}
-
-/* GALLERY */
-.gallery{
-  padding:120px 40px;
-  column-count:4;
-  column-gap:20px;
-}
+.hero h1{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:clamp(40px,6vw,90px);z-index:10;text-shadow:2px 2px 10px #000;}
+.arrow{position:absolute;top:50%;transform:translateY(-50%);font-size:40px;cursor:pointer;z-index:20;padding:10px;background:rgba(0,0,0,.4);border-radius:50%;}
+.left{left:20px;} .right{right:20px;}
+.gallery{padding:120px 40px;column-count:4;column-gap:20px;}
 @media(max-width:1200px){.gallery{column-count:3}}
 @media(max-width:800px){.gallery{column-count:2}}
 @media(max-width:500px){.gallery{column-count:1}}
-
-.item{
-  margin-bottom:20px;
-  break-inside:avoid;
-  border-radius:16px;
-  overflow:hidden;
-  cursor:pointer;
-  background:#0a0a0a;
-}
-
-.item img{
-  width:100%;
-  transition:.5s;
-}
+.item{margin-bottom:20px;break-inside:avoid;border-radius:16px;overflow:hidden;cursor:pointer;background:#0a0a0a;}
+.item img{width:100%;transition:.5s;}
 .item:hover img{transform:scale(1.08);}
-
-/* CAPTION */
-.caption{
-  padding:10px;
-  font-size:14px;
-  color:#aaa;
-  text-align:center;
-  letter-spacing:0.5px;
-}
-
-/* LIGHTBOX */
-#lightbox{
-  position:fixed;
-  inset:0;
-  background:#000;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:2000;
-}
-
-#lb-img{
-  max-width:90%;
-  max-height:90%;
-}
-
-.lb-arrow{
-  position:absolute;
-  top:50%;
-  transform:translateY(-50%);
-  font-size:50px;
-  cursor:pointer;
-  padding:20px;
-  color:#fff;
-}
-
-.lb-left{left:20px;}
-.lb-right{right:20px;}
-
-#lb-watermark{
-  position:absolute;
-  bottom:20px;
-  right:20px;
-  color:#fff;
-  font-size:16px;
-  opacity:0.7;
-  z-index:2010;
-}
-
-/* FOOTER */
-footer{
-  text-align:center;
-  padding:40px;
-  color:#777;
-}
-
-/* CLICK PROTECT */
-#copyright{
-  position:fixed;
-  bottom:20px;
-  left:50%;
-  transform:translateX(-50%);
-  background:#000;
-  padding:10px 20px;
-  border-radius:10px;
-  display:none;
-}
+.caption{padding:10px;font-size:14px;color:#aaa;text-align:center;letter-spacing:0.5px;}
+#lightbox{position:fixed;inset:0;background:#000;display:none;align-items:center;justify-content:center;z-index:2000;}
+#lb-img{max-width:90%;max-height:90%;}
+.lb-arrow{position:absolute;top:50%;transform:translateY(-50%);font-size:50px;cursor:pointer;padding:20px;color:#fff;}
+.lb-left{left:20px;} .lb-right{right:20px;}
+#lb-watermark{position:absolute;bottom:20px;right:20px;color:#fff;font-size:16px;opacity:0.7;z-index:2010;}
+footer{text-align:center;padding:40px;color:#777;}
+#copyright{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#000;padding:10px 20px;border-radius:10px;display:none;}
 </style>
-
 </head>
-
 <body>
 
-<nav></nav>
+<nav>PORTOFOLIU FOTO 2026</nav>
 
 <section class="hero" id="hero">
   <h1>TITUS EMANUEL</h1>
@@ -194,31 +54,30 @@ footer{
 <footer>© 2026 Titus Emanuel</footer>
 
 <script>
-let images=[];
-let imageNames=[];
+// IMAGINI EXEMPLE
+const images=[
+  "https://picsum.photos/id/1011/800/600",
+  "https://picsum.photos/id/1012/800/600",
+  "https://picsum.photos/id/1013/800/600",
+  "https://picsum.photos/id/1014/800/600",
+  "https://picsum.photos/id/1015/800/600",
+  "https://picsum.photos/id/1016/800/600"
+];
+const imageNames=[
+  "Foto 1",
+  "Foto 2",
+  "Foto 3",
+  "Foto 4",
+  "Foto 5",
+  "Foto 6"
+];
+
 let heroIndex=0;
 let currentIndex=0;
 
-async function loadImages(){
-  const url="https://api.github.com/repos/titusemanuel/titusemanuel.ro/contents/images";
-  const res=await fetch(url);
-  const data=await res.json();
-
-  images = data
-    .filter(f => /\.(jpg|jpeg|png)$/i.test(f.name))
-    .map(f => f.download_url);
-
-  imageNames = data
-    .filter(f => /\.(jpg|jpeg|png)$/i.test(f.name))
-    .map(f => f.name.replace(/\.[^/.]+$/,""));
-
-  createHero();
-  createGallery();
-}
-
+// HERO
 function createHero(){
   const hero=document.getElementById("hero");
-
   images.slice(0,6).forEach((src,i)=>{
     const img=document.createElement("img");
     img.src=src;
@@ -226,61 +85,46 @@ function createHero(){
     hero.appendChild(img);
   });
 }
-
 function showHero(i){
   const imgs=document.querySelectorAll(".hero img");
   imgs.forEach(el=>el.classList.remove("active"));
   imgs[i].classList.add("active");
 }
-
-function nextHero(){
-  heroIndex=(heroIndex+1)%6;
-  showHero(heroIndex);
-}
-
-function prevHero(){
-  heroIndex=(heroIndex-1+6)%6;
-  showHero(heroIndex);
-}
-
+function nextHero(){heroIndex=(heroIndex+1)%6; showHero(heroIndex);}
+function prevHero(){heroIndex=(heroIndex-1+6)%6; showHero(heroIndex);}
 setInterval(nextHero,4000);
 
+// GALERIE
 function createGallery(){
   const gallery=document.getElementById("gallery");
-
   images.forEach((src,i)=>{
     const div=document.createElement("div");
     div.className="item";
-
     const img=document.createElement("img");
     img.src=src;
     img.loading="lazy";
-
     const caption=document.createElement("div");
     caption.className="caption";
     caption.textContent=imageNames[i];
-
     div.appendChild(img);
     div.appendChild(caption);
-    gallery.appendChild(div);
-
     div.onclick=()=>openLightbox(i);
+    gallery.appendChild(div);
   });
 }
 
+// LIGHTBOX
 function openLightbox(i){
   currentIndex=i;
   document.getElementById("lightbox").style.display="flex";
   document.getElementById("lb-img").src=images[i];
   document.getElementById("lb-watermark").textContent=imageNames[i];
 }
-
 function nextImg(){
   currentIndex=(currentIndex+1)%images.length;
   document.getElementById("lb-img").src=images[currentIndex];
   document.getElementById("lb-watermark").textContent=imageNames[currentIndex];
 }
-
 function prevImg(){
   currentIndex=(currentIndex-1+images.length)%images.length;
   document.getElementById("lb-img").src=images[currentIndex];
@@ -288,9 +132,7 @@ function prevImg(){
 }
 
 document.getElementById("lightbox").onclick=e=>{
-  if(e.target.id==="lightbox"){
-    e.currentTarget.style.display="none";
-  }
+  if(e.target.id==="lightbox") e.currentTarget.style.display="none";
 };
 
 document.addEventListener("keydown",e=>{
@@ -307,7 +149,8 @@ document.addEventListener("contextmenu",e=>{
 
 document.addEventListener("dragstart",e=>e.preventDefault());
 
-loadImages();
+createHero();
+createGallery();
 </script>
 
 </body>
