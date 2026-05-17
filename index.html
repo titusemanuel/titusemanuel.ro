@@ -36,10 +36,7 @@ nav {
     align-items: center;
     z-index: 1000;
 }
-nav h2 {
-    font-size: 22px;
-    color: var(--accent);
-}
+nav h2 { font-size: 22px; color: var(--accent); }
 nav a {
     color: var(--primary);
     text-decoration: none;
@@ -192,7 +189,7 @@ footer {
 
 <section class="hero" id="hero">
     <div class="overlay"></div>
-    <h1></h1>
+    <h1>Portofoliu Foto 2026</h1>
     <div class="arrow left" onclick="prevHero()">‹</div>
     <div class="arrow right" onclick="nextHero()">›</div>
 </section>
@@ -210,22 +207,38 @@ footer {
 <footer id="footer">© 2026 Titus Emanuel</footer>
 
 <script>
-let images=[], imageNames=[], heroIndex=0, currentIndex=0;
+let images = [], imageNames = [], heroIndex = 0, currentIndex = 0;
 
+// Încarcă imaginile și generează etichete automat din numele fișierelor
 async function loadImages(){
-    const url="https://api.github.com/repos/titusemanuel/titusemanuel.ro/contents/images";
-    const res=await fetch(url);
-    const data=await res.json();
-    images = data.filter(f => /\.(jpg|jpeg|png)$/i.test(f.name)).map(f => f.download_url);
-    imageNames = data.filter(f => /\.(jpg|jpeg|png)$/i.test(f.name)).map(f => f.name.replace(/\.[^/.]+$/,""));
-    createHero(); createGallery();
+    const url = "https://api.github.com/repos/titusemanuel/titusemanuel.ro/contents/images";
+    const res = await fetch(url);
+    const data = await res.json();
+
+    // Filtrează doar imaginile
+    const files = data.filter(f => /\.(jpg|jpeg|png)$/i.test(f.name));
+
+    images = files.map(f => f.download_url);
+    imageNames = files.map(f => {
+        // Convertim numele fișierului în etichete: spații și underscore -> virgule
+        return f.name.replace(/\.[^/.]+$/, "")
+                     .replace(/[_\-]+/g, " ")
+                     .split(" ")
+                     .map(w => w.trim())
+                     .filter(w => w.length>0)
+                     .join(", ");
+    });
+
+    createHero();
+    createGallery();
 }
 
+// Hero section
 function createHero(){
-    const hero=document.getElementById("hero");
+    const hero = document.getElementById("hero");
     images.slice(0,6).forEach((src,i)=>{
-        const img=document.createElement("img");
-        img.src=src;
+        const img = document.createElement("img");
+        img.src = src;
         if(i===0) img.classList.add("active");
         hero.appendChild(img);
     });
@@ -239,46 +252,57 @@ function nextHero(){ heroIndex=(heroIndex+1)%6; showHero(heroIndex); }
 function prevHero(){ heroIndex=(heroIndex-1+6)%6; showHero(heroIndex); }
 setInterval(nextHero,4000);
 
+// Gallery section
 function createGallery(){
-    const gallery=document.getElementById("gallery");
+    const gallery = document.getElementById("gallery");
     images.forEach((src,i)=>{
-        const div=document.createElement("div"); div.className="item";
-        const img=document.createElement("img"); img.src=src; img.loading="lazy";
-        const caption=document.createElement("div"); caption.className="caption"; caption.textContent=imageNames[i];
-        div.appendChild(img); div.appendChild(caption);
-        div.onclick=()=>openLightbox(i);
+        const div = document.createElement("div");
+        div.className = "item";
+        const img = document.createElement("img");
+        img.src = src;
+        img.loading = "lazy";
+        const caption = document.createElement("div");
+        caption.className = "caption";
+        caption.textContent = imageNames[i];
+        div.appendChild(img);
+        div.appendChild(caption);
+        div.onclick = ()=>openLightbox(i);
         gallery.appendChild(div);
     });
 }
 
+// Lightbox
 function openLightbox(i){
-    currentIndex=i;
-    document.getElementById("lightbox").style.display="flex";
-    document.getElementById("lb-img").src=images[i];
-    document.getElementById("lb-watermark").textContent=imageNames[i];
+    currentIndex = i;
+    document.getElementById("lightbox").style.display = "flex";
+    document.getElementById("lb-img").src = images[i];
+    document.getElementById("lb-watermark").textContent = imageNames[i];
 }
 
 function nextImg(){ currentIndex=(currentIndex+1)%images.length; updateLightbox(); }
 function prevImg(){ currentIndex=(currentIndex-1+images.length)%images.length; updateLightbox(); }
 function updateLightbox(){
-    document.getElementById("lb-img").src=images[currentIndex];
-    document.getElementById("lb-watermark").textContent=imageNames[currentIndex];
+    document.getElementById("lb-img").src = images[currentIndex];
+    document.getElementById("lb-watermark").textContent = imageNames[currentIndex];
 }
 
-document.getElementById("lightbox").onclick=e=>{
+document.getElementById("lightbox").onclick = e => {
     if(e.target.id==="lightbox") e.currentTarget.style.display="none";
 };
-document.addEventListener("keydown",e=>{
+
+document.addEventListener("keydown", e => {
     if(e.key==="ArrowRight") nextImg();
     if(e.key==="ArrowLeft") prevImg();
 });
-document.addEventListener("contextmenu",e=>{
+
+document.addEventListener("contextmenu", e => {
     e.preventDefault();
-    const box=document.getElementById("copyright");
+    const box = document.getElementById("copyright");
     box.style.display="block";
-    setTimeout(()=>box.style.display="none",2000);
+    setTimeout(()=>box.style.display="none", 2000);
 });
-document.addEventListener("dragstart",e=>e.preventDefault());
+
+document.addEventListener("dragstart", e => e.preventDefault());
 
 loadImages();
 </script>
